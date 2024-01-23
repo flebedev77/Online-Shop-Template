@@ -1,0 +1,160 @@
+:root {
+    --border-color: rgb(173, 173, 173);
+}
+body {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+}
+* {
+    font-family: sans-serif;
+}
+.quantity-title {
+    font-size: 16px;
+    color: darkgray;
+}
+
+.item-container {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+main {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+@media (max-width: 325px) {
+    main {
+        flex-wrap: wrap;
+    }
+    .pay-container {
+        flex-basis: 100% !important;
+    }
+    .send-to-container {
+        width: 100% !important;
+    }
+}
+
+.send-to-container {
+    border: 1px var(--border-color) solid;
+    width: 60%;
+    min-width: 200px;
+    max-width: 500px;
+}
+
+.pay-container {
+    padding: 10px;
+    border: 1px var(--border-color) solid;
+    flex-basis: 40%;
+    max-width: 250px;
+}
+
+.postage-cost {
+    color: rgb(26, 127, 26);
+    font-weight: 600;
+}
+
+.items-bought {
+    display: flex;
+    justify-content: space-between;
+}
+.item-values {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-evenly;
+}
+.item-values > * {
+    margin: 0;
+}
+
+.send-to-header-container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border-bottom: 1px var(--border-color) solid;
+}
+.send-to-header-container > h2 {
+    margin: 5px 0;
+}
+.send-to-header-container > img {
+    margin: 5px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.detail-grid > input {
+    border-radius: 5px;
+    border: 1px var(--border-color) solid;
+    outline: 0;
+    padding: 7px;
+    font-size: 15px;
+    min-width: 1px;
+}
+
+#region {
+    grid-column-start: 1;
+    grid-column-end: 7;
+}
+
+#sadress,
+#sadress2,
+#lname,
+#fname {
+    grid-column: span 3;
+}
+
+#suburb,
+#state,
+#pcode {
+    grid-column: span 2;
+}
+
+#email,
+#cemail {
+    grid-column: span 3;
+}
+
+#phone {
+    grid-column: span 6;
+}
+
+hr {
+    width: 100%;
+    margin: 0;
+    height: 1px;
+    border: none;
+    outline: none;
+    border-top: 1px var(--border-color) solid;
+}
+
+button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    background: lightslategray;
+    border-radius: 100vmax;
+}
+.lock-icon {
+    background: url(https://ir.ebaystatic.com/cr/v/c01/payment-sprites/payment-sprites-0.2.4.svg) 97.642291398% 53.6870443073% no-repeat;
+    height: 19.25px;
+    width: 15.39px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    margin-top: -6px;
+}

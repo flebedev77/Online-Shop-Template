@@ -1,0 +1,161 @@
+body {
+    overflow-x: hidden;
+}
+
+.product {
+    display: flex;
+    margin-top: 100px;
+}
+@media (max-width: 600px) {
+    .product {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .product-details {
+        margin-top: 10px;
+        margin-left: 90px;
+    }
+}
+.product-image-container {
+    background: white;
+    border: 1px rgba(60, 60, 60, 0.3) solid;
+    position: relative;
+    width: 60%;
+    min-width: 200px;
+    margin-left: 60px;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+}
+.product-image-container img {
+    width: 100%;
+    margin: auto auto;
+}
+.product .product-details {
+    margin: 0 30px;
+    background: rgb(248, 248, 248);
+    border-radius: 10px;
+    padding: 20px;
+    flex-basis: 30%;
+}
+hr {
+    border: none;
+    border-bottom: 1px lightgray solid;
+}
+.item-cost {
+    font-size: 25px;
+}
+.item-prev-cost {
+    font-size: 17px;
+    color: rgb(67, 67, 67);
+    font-weight: 100;
+}
+.item-discount {
+    color: firebrick;
+    font-weight: 100;
+    font-size: 27px;
+}
+.item-cost-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.order-buttons {
+    display: block;
+    margin-top: 50px;
+}
+.buy-button {
+    font-size: 18px;
+    font-weight: 700;
+    display: block;
+    background: #0053a0;
+    color: whitesmoke;
+    padding: 15px 25px;
+    border-radius: 100px;
+    border: none;
+    margin: 10px 0;
+    width: 100%;
+    transition-property: background;
+    transition-duration: 0.1s;
+}
+.buy-now-button {
+    background: #3498ca;
+}
+.buy-now-button:hover {
+    background: #004b92;
+}
+.add-cart-button:hover {
+    /* background: #3498ca; */
+    background: #004688;
+}
+input[type=number] {
+    margin-top: 100px;
+}
+
+.adress-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.262);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
+.dialog {
+    background: whitesmoke;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.dialog h2 {
+    text-align: center;
+}
+
+.adress-header {
+    margin-bottom: 40px;
+}
+
+.dialog-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.checkout-button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.checkout-button-container > button {
+    padding: 10px 20px;
+    background: rgb(75, 89, 152);
+    color: white;
+    font-style: bold;
+    font-size: 18px;
+    border: 0;
+    outline: none;
+    transition-property: background;
+    transition-duration: 0.1s;
+}
+
+.checkout-button-container > button:hover {
+    background: rgb(91, 106, 173);
+}
+
+#product-description {
+    margin: 10px;
+}
+
+#description-title {
+    font-size: 30px;
+}
+
+#description {
+    margin: 50px 50px;
+}

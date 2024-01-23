@@ -1,0 +1,160 @@
+body {
+    padding-left: 0 !important;
+}
+main {
+    margin-top: 100px;
+    max-width: 100rem;
+    min-width: 200px;
+    width: 83%;
+    display: flex;
+    /* grid-template-columns: 0.2fr 0.8fr; */
+    gap: 0.5rem;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.tools {
+    flex-basis: 20%;
+}
+.products {
+    flex-basis: 80%;
+    min-width: 200px;
+}
+
+@media (max-width: 890px) {
+    main {
+        flex-wrap: wrap;
+    }
+    .tools {
+        width: 0;
+        display: none;
+    }
+    .item {
+        flex-direction: column;
+    }
+    .item-image-container {
+        width: 100%;
+        aspect-ratio: 1/1;
+        display: grid;
+        place-items: center;
+    }
+}
+
+main > div {
+    background: rgb(250, 250, 250);
+    border-radius: 0.2rem;
+    padding: 10px;
+}
+
+.item {
+    display: flex;
+    gap: 0.1rem;
+    width: auto;
+    margin-bottom: 0.5rem;
+}
+.item-image-container img {
+    width: 100%;
+}
+.item-image-container {
+    flex-basis: 40%;
+    display: grid;
+    place-items: center;
+}
+.item-content {
+    flex-basis: 60%;
+    padding: 10px;
+}
+.item-content .item-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.cost {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+}
+.cost .item-cost {
+    font-size: 23px;
+    font-weight: bold;
+}
+.cost .item-prev-cost {
+    font-size: 17px;
+}
+.item-subtitle {
+    font-size: 16px;
+    color: darkgray;
+    margin-top: 0;
+}
+.item-details {
+    font-size: 14px;
+    color: darkgray;
+}
+.item-details p {
+    margin: 5px;
+}
+
+.similar-item-list {
+    list-style: none;
+    margin-left: 0;
+}
+.similar-item-list > li {
+    margin-top: 5px;
+    margin-left: -10px;
+}
+.similar-item-list a {
+    color: #3665f3;
+    text-decoration: none;
+}
+.similar-item-list a:hover {
+    text-decoration: underline;
+}
+
+.tools h3 {
+    font-size: 17px;
+    color: rgb(25, 25, 25);
+}
+
+.condition-container {
+    display: block;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    background: #eee;
+    border: none;
+    outline: none;
+    border-radius: 0.5rem;
+}
+.condition-container input:focus {
+    outline: 1px solid black;
+}
+
+.condition-label-container {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.condition {
+    margin: 10px;
+}
+.tools > div {
+    margin-bottom: 15px;
+}
+.price-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.price > p {
+    margin-bottom: 3px;
+}
+.postage-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.postage h3 {
+    margin-bottom: 3px;
+}

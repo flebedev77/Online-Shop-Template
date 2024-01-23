@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/common-style.css">
+    <link rel="stylesheet" href="css/login-style.css">
+    <script src="js/cookieRemember.js"></script>
+</head>
+
+<body>
+    <div class="form-wrapper">
+        <div class="form">
+            <h1>G'day</h1>
+            <div class="username-wrapper">
+                <label for="username">Username</label>
+                <input type="text" required placeholder="Username..." autocomplete="off" spellcheck="false"
+                    name="username" id="username" />
+            </div>
+            <div class="password-wrapper">
+                <label for="password">Password</label>
+                <input type="password" required placeholder="Password..." autocomplete="off" spellcheck="false"
+                    name="password" id="password" />
+            </div>
+            <div class="checkbox">
+                <label for="remember">Remember Me</label>
+                <input type="checkbox" id="remember" />
+            </div>
+            <input type="submit" value="Continue" class="continue-button" />
+            <div class="signup">
+                <p>Don't have an account? </p>
+                <a href="/signup">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const button = document.getElementsByClassName("continue-button")[0];
+        const remember = document.getElementById("remember");
+
+        button.onclick = function () {
+            const data = {
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value
+            }
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then((res) => {
+                if (res.ok) return res.json();
+            }).then((data) => {
+                alert(data.data);
+                if (data.ok) {
+                    if (data.cookie) {
+                        setCookie("remember", data.cookie, 1);
+                    }
+                    window.close();
+                    window.location = data.redirect;
+                }
+            });
+
+            if (remember.checked) {
+                localStorage.setItem("username", document.getElementById("username").value);
+                localStorage.setItem("password", document.getElementById("password").value);
+            } else {
+                localStorage.setItem("username", "");
+                localStorage.setItem("password", "");
+            }
+        }
+
+        window.onload = function() {
+            remember.checked = localStorage.getItem("check");
+            document.getElementById("username").value = localStorage.getItem("username");
+            document.getElementById("password").value = localStorage.getItem("password");
+        }
+    </script>
+</body>
+
+</html>

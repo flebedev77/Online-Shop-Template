@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="<%= locals.URL %>css/checkout-style.css">
+</head>
+
+<body>
+    <h1 class="buying-container">
+        Buying
+        <div class="item-container">
+            <p class="quantity-title">x<%= locals.quantity %>
+            </p>
+            <img src="<%= locals.URL %>imgs/products/<%= locals.id %>.jpg" width="35px" />
+            <%= locals.itemName %>
+        </div>
+    </h1>
+    <main>
+        <div class="send-to-container">
+            <div class="send-to-header-container">
+                <img src="<%= locals.URL %>imgs/home.png" width="25px" />
+                <h2>Send to</h2>
+            </div>
+            <div class="detail-grid">
+                <input type="text" id="region" placeholder="Country or region">
+                <input type="text" id="fname" placeholder="First name">
+                <input type="text" id="lname" placeholder="Last name">
+                <input type="text" id="sadress" placeholder="Street address">
+                <input type="text" id="sadress2" placeholder="Street address 2 (optional)">
+                <input type="text" id="suburb" placeholder="Suburb">
+                <input type="text" id="state" placeholder="State / Province">
+                <input type="text" id="pcode" placeholder="Postcode">
+                <input type="email" id="email" placeholder="Email">
+                <input type="email" id="cemail" placeholder="Confirm email">
+                <input type="tel" id="phone" placeholder="Phone number (required)">
+            </div>
+        </div>
+        <div class="pay-container">
+            <div class="items-bought">
+                <div class="item-titles">
+                    <p class="amount-items">Items (<%= locals.totalQuantity %>)</p>
+                    <p class="postage-title">Postage</p>
+                </div>
+                <div class="item-values">
+                    <p class="total-cost">AU $<%= locals.totalPrice/100 %>
+                    </p>
+                    <p class="postage-cost">Free</p>
+                </div>
+            </div>
+            <hr>
+            <h2>Order total AU $<%= totalPrice/100 %>
+            </h2>
+            <button>
+                <span class="lock-icon"></span>
+                Confirm and pay
+            </button>
+        </div>
+    </main>
+
+    <script>
+        //checkout script
+        const button = document.querySelector("button");
+        const region = document.getElementById("region");
+        const fname = document.getElementById("fname");
+        const lname = document.getElementById("lname");
+        const sadress = document.getElementById("sadress");
+        const sadress2 = document.getElementById("sadress2");
+        const suburb = document.getElementById("suburb");
+        const state = document.getElementById("state");
+        const pcode = document.getElementById("pcode");
+        const email = document.getElementById("email");
+        const cemail = document.getElementById("cemail");
+        const phone = document.getElementById("phone");
+        const lockIcon = document.querySelector(".lock-icon");
+
+        window.onkeydown = function () {
+            if (checkvalues()) {
+                button.style.background = "rgb(0, 146, 2)";
+                lockIcon.style.display = "none";
+            } else {
+                button.style.background = "darkslategray";
+                lockIcon.style.display = "block";
+            }
+        }
+
+        button.onclick = function () {
+            if (checkvalues()) {
+                let additionalItems = JSON.parse('<%= locals.items %>'.replaceAll("&#34;", '"'));
+
+                const items = [
+                    { id: Number("<%= locals.id %>"), quantity: Number("<%= locals.quantity %>") }
+                ];
+
+                additionalItems.forEach((item) => {
+                    items.push({ id: Number(item.id), quantity: Number(item.quantity) })
+                })
+
+                const data = {
+                    items,
+                    formDetails: {
+                        region: region.value.trim(),
+                        firstName: fname.value.trim(),
+                        lastName: lname.value.trim(),
+                        adress: sadress.value.trim(),
+                        adress2: sadress2.value.trim(),
+                        suburb: suburb.value.trim(),
+                        state: state.value.trim(),
+                        postalCode: pcode.value.trim(),
+                        email: email.value.trim(),
+                        phone: phone.value.trim()
+                    }
+                }
+
+                fetch("<%= locals.URL %>create-checkout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(items)
+                }).then(text => { return text.json(); })
+                    .then(({ url }) => {
+                        window.location = url;
+                    })
+            } else {
+                alert("Please enter all the fields");
+            }
+        }
+        function checkvalues() {
+            if (region.value.trim() == "") return false;
+            if (fname.value.trim() == "" || Number(fname.value.trim()) == undefined) return false;
+            if (lname.value.trim() == "" || Number(lname.value.trim()) == undefined) return false;
+            if (sadress.value.trim() == "") return false;
+            if (sadress2.value.trim() == "") return false;
+            if (suburb.value.trim() == "") return false;
+            if (state.value.trim() == "") return false;
+            if (pcode.value.trim() == "" && Number(pcode.value.trim()) != undefined) return false;
+            if (email.value.trim() == "" && email.value.trim().includes("@")) return false;
+            if (cemail.value.trim() == "" && cemail.value.trim() == email.value.trim()) return false;
+            if (phone.value.trim() == "") return false;
+            return true;
+        }
+
+    </script>
+    <script>
+        //adding checkout items
+        const items = JSON.parse('<%= locals.items %>'.replaceAll("&#34;", '"'));
+        const buyingContainer = document.querySelector(".buying-container");
+
+        items.forEach((item) => {
+            const itemContainer = document.createElement("div");
+            itemContainer.classList.add("item-container");
+            const quantityTitle = document.createElement("p");
+            quantityTitle.innerText = "x" + item.quantity;
+            quantityTitle.classList.add("quantity-title");
+            const image = document.createElement("img");
+            image.src = "<%= locals.URL %>imgs/products/" + item.id + ".jpg";
+            image.width = 35;
+
+            buyingContainer.appendChild(itemContainer);
+            itemContainer.appendChild(quantityTitle);
+            itemContainer.appendChild(image);
+            itemContainer.innerHTML += item.name;
+        })
+    </script>
+</body>
+
+</html>

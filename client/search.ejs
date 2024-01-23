@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebay search - <%= locals.search %>
+    </title>
+    <link rel="stylesheet" href="<%= locals.URL %>css/common-style.css" type="text/css">
+    <link rel="stylesheet" href="<%= locals.URL %>css/search-style.css">
+    <script src="<%= locals.URL %>js/cookieRemember.js"></script>
+    <script src="<%= locals.URL %>js/authenticator.js"></script>
+</head>
+
+<body>
+    <nav class="navigation-bar">
+        <a class="logo" href="/"><img src="<%= locals.URL %>imgs/logo.png" /></a>
+        <div class="search-bar">
+            <input id="search-input" type="text" placeholder="Search for anything" spellcheck="false" autocomplete="off"
+                value="<%= locals.search.replaceAll(" _", " " ) %>" />
+            <button id="search-button" class="blue-button">Search</button>
+        </div>
+        <a class="login-button" href="<%= locals.URL %>login" target="_blank">Login</a>
+        <a class="signup-button" href="<%= locals.URL %>signup" target="_blank">Signup</a>
+        <a class="signup-button" href="<%= locals.URL %>account">My account</a>
+        <a class="signup-button" href="#"
+            onclick='document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });'>Sign
+            out</a>
+        <img src="<%= locals.URL %>imgs/cart.png" id="cart-button" />
+    </nav>
+    <div class="cart-items" id="cartItems"></div>
+
+    <main>
+        <div class="tools">
+            <div class="similar-products">
+                <h3>Similar Searches</h3>
+                <ul class="similar-item-list">
+                </ul>
+            </div>
+            <hr>
+            <div class="condition">
+                <h3>Condition</h3>
+                <div class="condition-container">
+                    <div class="condition-label-container">
+                        <input type="checkbox" class="new-condition-input" id="new-condition-input"
+                            name="new-condition-input" />
+                        <label for="new-condition-input">New</label>
+                    </div>
+                    <div class="condition-label-container">
+                        <input type="checkbox" class="used-condition-input" id="used-condition-input"
+                            name="used-condition-input" />
+                        <label for="used-condition-input">Used</label>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="price">
+                <h3>Price</h3>
+                <p>Show items with price between</p>
+                <div class="price-container">
+                    <input type="number" min="0" max="100000000" step="1" placeholder="Min" />
+                    <p>To</p>
+                    <input type="number" min="0" max="100000000" step="1" placeholder="Max" />
+                </div>
+            </div>
+            <hr>
+            <div class="postage">
+                <h3>Postage options</h3>
+                <div class="postage-container">
+                    <input type="checkbox" />
+                    <p>Free</p>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="products">
+            <h1>What we found matching <%= locals.search %>
+            </h1>
+            <div class="product-container">
+                <!-- <a href="/items/AirPods" target="_blank" class="no-decoration item">
+                    <div class="item-image-container">
+                        <img
+                            src="<%= locals.URL %>imgs/products/Sony WF-1000XM4 Noise Canceling Wireless Earbud Headphones - Silver.jpg" />
+                    </div>
+                    <div class="item-content">
+                        <p class="item-title">Sony WF-1000XM4 Noise Canceling Wireless Earbud Headphones - Silver</p>
+                        <p class="item-subtitle">Brand new</p>
+                        <div class="cost">
+                            <p class="item-cost">AU $165</p>
+                            <p class="item-prev-cost"><s> AU $180</s></p>
+                        </div>
+                        <div class="item-details">
+                            <p>Buy it now</p>
+                            <p>Free postage</p>
+                        </div>
+                    </div>
+                </a> -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let authenticated = false;
+        const cartButton = document.getElementById("cart-button");
+        const cartItems = document.getElementById("cartItems");
+        const productContainer = document.querySelector(".product-container");
+
+        const items = JSON.parse('<%= locals.items %>'.replaceAll("&#34;", '"')).items;
+        items.forEach((item, index) => {
+            const productName = item.name.replaceAll("&amp;", "&");
+
+            const product = document.createElement("a");
+            product.classList.add("no-decoration");
+            product.classList.add("item");
+            product.href = "<%= locals.URL %>items/" + item.id;
+
+            //const productParent = document.createElement("div");
+            //productParent.classList.add("item-image-container");
+
+            const itemImageContainer = document.createElement("div");
+            itemImageContainer.classList.add("item-image-container");
+
+            const itemImage = document.createElement("img");
+            itemImage.src = "<%= locals.URL %>imgs/products/" + item.id + ".jpg";
+
+            const itemContentContainer = document.createElement("div");
+            itemContentContainer.classList.add("item-content");
+
+            const itemTitle = document.createElement("p");
+            itemTitle.classList.add("item-title");
+            itemTitle.innerText = productName;
+
+            const itemSubTitle = document.createElement("p");
+            itemSubTitle.classList.add("item-subtitle");
+            itemSubTitle.innerText = "Brand New";
+
+            const costContainer = document.createElement("div");
+            costContainer.classList.add("cost");
+
+            const itemCost = document.createElement("p");
+            itemCost.classList.add("item-cost");
+            itemCost.innerText = "AU $" + item.priceInCents / 100;
+
+            const itemPrevCost = document.createElement("p");
+            itemPrevCost.classList.add("item-prev-cost");
+
+            const s = document.createElement("s");
+            s.innerText = "AU $" + Math.round((item.priceInCents / 100) * 1.1);
+            itemPrevCost.appendChild(s);
+
+            const itemDetails = document.createElement("div");
+            itemDetails.classList.add("item-details");
+
+            const buyItNow = document.createElement("p");
+            buyItNow.innerText = "But it now";
+
+            const postage = document.createElement("p");
+            postage.innerText = "Free Postage";
+
+            productContainer.appendChild(product);
+            //product.appendChild(productParent);
+            product.appendChild(itemImageContainer);
+            itemImageContainer.appendChild(itemImage);
+            product.appendChild(itemContentContainer);
+            itemContentContainer.appendChild(itemTitle);
+            itemContentContainer.appendChild(itemSubTitle);
+            itemContentContainer.appendChild(costContainer);
+            costContainer.appendChild(itemCost);
+            costContainer.appendChild(itemPrevCost);
+            itemContentContainer.appendChild(itemDetails);
+            itemDetails.appendChild(buyItNow);
+            itemDetails.appendChild(postage);
+
+            if (index < 2) {
+                const similarSearchList = document.getElementsByClassName("similar-item-list")[0];
+
+                const similarSearches = productName.split(" ");
+
+                similarSearches.forEach((search) => {
+                    const li = document.createElement("li");
+                    const a = document.createElement("a");
+                    a.href = "<%= locals.URL %>search/" + search;
+                    a.innerText = search;
+
+                    similarSearchList.appendChild(li);
+                    li.appendChild(a);
+                })
+            }
+        })
+
+        // the link was "ebay.com/item/<Item name>"
+        // now the link is "ebay.com/item/<Item id>"
+        // const products = productContainer.getElementsByTagName("a");
+        // for (let i = 0; i < products.length; i++) {
+        //     const a = products[i];
+
+        //     if (!a) continue;
+
+        //     const label = a.getElementsByClassName("item-title")[0];
+
+        //     if (!label) continue;
+
+        //     const link = label.innerHTML.replaceAll(" ", "_");
+
+        //     const image = a.getElementsByTagName("img")[0];
+        //     const friendlySrc = image.src.replaceAll("/", "&");
+        //     a.href = "/items/" + link;
+        // }
+
+        function openCart() {
+            loadCartItems();
+            cartItemstwo.style.visibility = "visible";
+        }
+
+        cartItems.style.visibility = "hidden";
+        let cartItemsHidden = true;
+
+        cartButton.onclick = function () {
+            if (cartItemsHidden) {
+                loadCartItems();
+                cartItems.style.visibility = "visible";
+            } else cartItems.style.visibility = "hidden";
+            cartItemsHidden = !cartItemsHidden;
+        }
+
+        function loadCartItems() {
+
+            if (authenticated == false) {
+                alert("Log in to add items to your cart");
+                return;
+            }
+            cartItems.innerHTML = ""; //clear the cart DOM
+
+            fetch("<%= locals.URL %>get-cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ cookie: getCookie("remember") })
+            }).then(res => {
+                if (res.ok) return res.json();
+            })
+                .then((data) => {
+                    data.cart.forEach((item, i) => {
+                        const cartItemContainer = document.createElement("div");
+                        cartItemContainer.classList.add("cart-item");
+
+                        const cartItemDetails = document.createElement("div");
+                        cartItemDetails.classList.add("cart-item-details");
+
+                        const cartItemImage = document.createElement("img");
+                        cartItemImage.classList.add("cart-item-image");
+                        cartItemImage.src = "<%= locals.URL %>imgs/products/" + data.keys[i] + ".jpg";
+
+                        const cartItemDescription = document.createElement("div");
+                        cartItemDescription.classList.add("cart-item-description");
+                        cartItemDescription.innerText = item;
+
+                        const cartItemCostContainer = document.createElement("div");
+                        cartItemCostContainer.classList.add("cart-item-cost-container");
+
+                        const cartItemCost = document.createElement("div");
+                        cartItemCost.classList.add("cart-item-cost");
+                        cartItemCost.innerText = "US $" + data.costs[i] + "ea";
+
+                        const cartItemAmount = document.createElement("p");
+                        cartItemAmount.innerText = "1x";
+                        cartItemAmount.classList.add("cart-item-quantity");
+
+                        const cartItemRemoveButton = document.createElement("img");
+                        cartItemRemoveButton.classList.add("cart-remove-button");
+                        cartItemRemoveButton.src = "<%= locals.URL %>imgs/close.png";
+
+                        cartItemRemoveButton.onclick = function () {
+                            fetch("<%= locals.URL %>remove-cart-item", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ cookie: getCookie("remember"), item: this.parentElement.parentElement.getElementsByClassName("cart-item-description")[0].innerText })
+                            }).then(res => {
+                                if (res.ok) return res.json();
+                            }).then(data => {
+                                loadCartItems();
+                            })
+                        }
+
+                        let itemExists = false;
+
+                        for (let j = 0; j < cartItems.children.length; j++) {
+                            const child = cartItems.children[j];
+                            const d = child.querySelector(".cart-item-description");
+
+                            if (d.innerText == item) {
+                                itemExists = true;
+                                const quantity = child.querySelector(".cart-item-quantity");
+                                quantity.innerText = (Number(quantity.innerText.replaceAll("x", "")) + 1) + "x";
+                                const c = child.querySelector(".cart-item-cost");
+                                let total = Number(quantity.innerText.replaceAll("x", "")) * Number(data.costs[i]);
+                                c.innerText = "US $" + data.costs[i] + "ea" + " Total $" + total;
+                            }
+                        }
+
+                        if (!itemExists) {
+                            cartItems.appendChild(cartItemContainer);
+                            cartItemContainer.appendChild(cartItemDetails);
+                            cartItemDetails.appendChild(cartItemImage);
+                            cartItemDetails.appendChild(cartItemDescription);
+                            cartItemContainer.appendChild(cartItemCostContainer);
+                            cartItemCostContainer.appendChild(cartItemAmount);
+                            cartItemCostContainer.appendChild(cartItemCost);
+                            cartItemCostContainer.appendChild(cartItemRemoveButton);
+                        }
+                    })
+
+                    if (data.cart.length == 0) {
+                        const emptyCart = document.createElement("div");
+                        emptyCart.innerText = "Your cart is empty! Time to start shopping!";
+                        emptyCart.classList.add("empty");
+                        cartItems.appendChild(emptyCart);
+                    } else {
+                        const checkoutButton = document.createElement("button");
+                        checkoutButton.innerText = "Checkout";
+                        checkoutButton.classList.add("cart-checkout-button");
+                        cartItems.appendChild(checkoutButton);
+
+                        checkoutButton.onclick = function () {
+                            // fetch("<%= locals.URL %>checkout-cart", {
+                            //     method: "POST",
+                            //     headers: {
+                            //         "Content-Type": "application/json"
+                            //     },
+                            //     body: JSON.stringify({ cookie: getCookie("remember") })
+                            // }).then(text => { return text.json() }).then(data => {
+                            //     window.location = data.url;
+                            // })
+                            fetch("/get-checkout-url", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ cookie: getCookie("remember") })
+                            }).then((text) => {
+                                if (text.ok) {
+                                    return text.json();
+                                }
+                            }).then((url) => {
+                                window.location.href = url.url;
+                            })
+                        }
+                    }
+                })
+        }
+
+        window.onfocus = function () {
+            loadCartItems();
+        }
+        window.onload = function () {
+            authenticated = authenticate(getCookie("remember"));
+        }
+    </script>
+    <script>
+        //search script
+        const searchBar = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-button");
+
+        searchButton.onclick = function () {
+            search();
+        }
+        window.onkeydown = function (e) {
+            if (e.key == "Enter") {
+                search();
+            }
+        }
+        function search() {
+            window.location = "/search/" + searchBar.value.replaceAll('"', "").replaceAll("'", "").replaceAll("-", "").replaceAll(" ", "_");
+        }
+    </script>
+</body>
+
+</html>

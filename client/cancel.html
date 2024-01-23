@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled</title>
+    <link rel="stylesheet" href="common-style.css">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .option-buttons {
+            display: block;
+        }
+        .option-buttons button {
+            background: rgb(75, 57, 216);
+            border: none;
+            border-radius: 60px;
+            padding: 10px 20px;
+            color: white;
+            font-size: 19px;
+            margin: 5px;
+            transition-property: background;
+            transition-duration: 0.5s;
+        }
+        .option-buttons button:hover {
+            background: rgb(65, 47, 205);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navigation-bar">
+        <a class="logo" href="/"><img src="imgs/logo.png" /></a>
+        <div class="search-bar">
+            <input id="search-input" type="text" placeholder="Search for anything" spellcheck="false"
+                autocomplete="off" />
+            <button id="search-button" class="blue-button">Search</button>
+        </div>
+        <a class="login-button" href="/login">Login</a>
+        <a class="signup-button" href="/signup">Signup</a>
+        <img src="imgs/cart.png" id="cart-button" />
+    </nav>
+
+    <header>
+        <h2>Payment Cancelled</h2>
+        <div class="option-buttons">
+            <button class="back-to-product-button">Go back to product</button><br>
+            <button class="back-to-home-screen-button">Go to home screen</button>
+        </div>
+    </header>
+</body>
+</html>

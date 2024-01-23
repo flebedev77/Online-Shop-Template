@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebay Product - <%= locals.itemName %>
+    </title>
+    <link rel="stylesheet" href="<%= locals.URL %>css/common-style.css" type="text/css">
+    <link rel="stylesheet" href="<%= locals.URL %>css/product-style.css">
+    <script src="<%= locals.URL %>js/cookieRemember.js"></script>
+    <script src="<%= locals.URL %>js/authenticator.js"></script>
+</head>
+
+<body>
+    <nav class="navigation-bar">
+        <a class="logo" href="/"><img src="<%= locals.URL %>imgs/logo.png" /></a>
+        <div class="search-bar">
+            <input id="search-input" type="text" placeholder="Search for anything" spellcheck="false"
+                autocomplete="off" />
+            <button id="search-button" class="blue-button">Search</button>
+        </div>
+        <a class="login-button" href="<%= locals.URL %>login" target="_blank">Login</a>
+        <a class="signup-button" href="<%= locals.URL %>signup" target="_blank">Signup</a>
+        <a class="signup-button" href="<%= locals.URL %>account">My account</a>
+        <a class="signup-button" href="#"
+            onclick='document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });'>Sign
+            out</a>
+        <img src="<%= locals.URL %>imgs/cart.png" id="cart-button" />
+    </nav>
+    <div class="cart-items" id="cartItems">
+        <!-- Example item
+        <div class="cart-item">
+            <div class="cart-item-details">
+                <img src="imgs/products/Apple iPhone 12 64GB Factory Unlocked AT&T T-Mobile Verizon Excellent Condition.jpg"
+                    class="cart-item-image">
+                <p class="cart-item-description">Apple iPhone 12 64GB Factory Unlocked AT&T T-Mobile Verizon Excellent
+                    Condition</p>
+            </div>
+            <p class="cart-item-cost">$20.00</p>
+        </div>-->
+    </div>
+    <div class="product">
+        <div class="product-image-container">
+            <img src="<%= locals.URL %>imgs/products/<%= locals.itemId %>.jpg" />
+        </div>
+        <div class="product-details">
+            <h2 class="item-name">
+                <%= locals.itemName %>
+            </h2> <!-- Product Name -->
+            <hr>
+            <div class="item-cost-container">
+                <h2 class="item-prev-cost"><s>AU $<%= locals.itemCost/100 + Math.round((locals.itemCost/100)*0.1) %></s>
+                </h2>
+                <h2 class="item-cost">AU $<%= locals.itemCost/100 %>
+                </h2>
+                <h2 class="item-discount">-10%</h2>
+            </div>
+            <label for="quantity-amount">Quantity</label>
+            <input type="number" step="1" min="1" max="100" id="quantity-amount" value="1" /><br>
+            <div class="order-buttons">
+                <button class="buy-button buy-now-button" id="buyNowButton">Buy it now</button>
+                <button class="buy-button add-cart-button" id="addToCartButton">Add to cart</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="description">
+        <div id="description-title">Description</div>
+        <div id="product-description"></div>
+    </div>
+
+    <div class="adress-overlay">
+        <div class="dialog">
+            <div class="adress-header">
+                <h2>Checkout</h2>
+            </div>
+            <div class="dialog-body">
+                <label for="adress">Enter the adress to deliver to</label>
+                <input type="text" id="adress" name="adress" />
+            </div>
+            <div class="checkout-button-container">
+                <button id="checkout-button" class="checkout-button">Payment</button>
+                <button id="cancel-button" class="cancel-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>
+            <%= locals.author %>
+        </p>
+    </footer>
+
+    <script>
+        //product script
+        const buyNowButton = document.getElementById("buyNowButton");
+        const quantityAmountInput = document.getElementById("quantity-amount");
+        const adressOverlay = document.getElementsByClassName("adress-overlay")[0];
+        const cancelButton = document.getElementById("cancel-button");
+        const checkoutButton = document.getElementById("checkout-button");
+        const addToCartButton = document.getElementById("addToCartButton");
+        let cartItemstwo = document.getElementById("cartItems");
+
+        let pdesc = document.getElementById("product-description");
+
+        let authenticated = false;
+
+        // buyNowButton.onclick = function () {
+        //     adressOverlay.style.visibility = "visible";
+        // }
+        // cancelButton.onclick = function () {
+        //     adressOverlay.style.visibility = "hidden";
+        // }
+        pdesc.innerText = "<%= description %>";
+
+        buyNowButton.onclick = function () {
+            //checkout();
+            window.location.href = ("<%= locals.URL %>checkout/" + "<%= locals.itemId %>" + "$quantity=" + quantityAmountInput.value).replaceAll(" ", "_");
+        }
+
+        addToCartButton.onclick = function () {
+            const data = {
+                cookie: getCookie("remember"),
+                cart: "<%= locals.itemId %>",
+                quantity: Number(quantityAmountInput.value)
+            }
+            fetch("<%= locals.URL %>add-cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            setTimeout(function () {
+                openCart();
+            }, 1000);
+        }
+
+        function checkout() {
+            const items = [
+                { id: Number("<%= locals.itemId %>"), quantity: Number(quantityAmountInput.value) }
+            ];
+            fetch("<%= locals.URL %>create-checkout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(items)
+            }).then(res => {
+                if (res.ok) return res.json();
+            })
+                .then(({ url }) => {
+                    window.location.href = url;
+                })
+        }
+
+        window.onload = function () {
+            authenticated = authenticate(getCookie("remember"));
+        }
+    </script>
+    <script>
+        //cart script
+        const cartButton = document.getElementById("cart-button");
+        const cartItems = document.getElementById("cartItems");
+
+        cartItems.style.visibility = "hidden";
+        let cartItemsHidden = true;
+
+        cartButton.onclick = function () {
+            if (cartItemsHidden) {
+                loadCartItems();
+                cartItems.style.visibility = "visible";
+            } else cartItems.style.visibility = "hidden";
+            cartItemsHidden = !cartItemsHidden;
+        }
+
+        function loadCartItems() {
+            cartItems.innerHTML = ""; //clear the cart DOM
+
+            fetch("<%= locals.URL %>get-cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ cookie: getCookie("remember") })
+            }).then(res => {
+                if (res.ok) return res.json();
+            })
+                .then((data) => {
+                    data.cart.forEach((item, i) => {
+                        const cartItemContainer = document.createElement("div");
+                        cartItemContainer.classList.add("cart-item");
+
+                        const cartItemDetails = document.createElement("div");
+                        cartItemDetails.classList.add("cart-item-details");
+
+                        const cartItemImage = document.createElement("img");
+                        cartItemImage.classList.add("cart-item-image");
+                        cartItemImage.src = "<%= locals.URL %>imgs/products/" + data.keys[i] + ".jpg";
+
+                        const cartItemDescription = document.createElement("div");
+                        cartItemDescription.classList.add("cart-item-description");
+                        cartItemDescription.innerText = item;
+
+                        const cartItemCostContainer = document.createElement("div");
+                        cartItemCostContainer.classList.add("cart-item-cost-container");
+
+                        const cartItemCost = document.createElement("div");
+                        cartItemCost.classList.add("cart-item-cost");
+                        cartItemCost.innerText = "US $" + data.costs[i] + "ea";
+
+                        const cartItemAmount = document.createElement("p");
+                        cartItemAmount.innerText = "1x";
+                        cartItemAmount.classList.add("cart-item-quantity");
+
+                        const cartItemRemoveButton = document.createElement("img");
+                        cartItemRemoveButton.classList.add("cart-remove-button");
+                        cartItemRemoveButton.src = "<%= locals.URL %>imgs/close.png";
+
+                        cartItemRemoveButton.onclick = function () {
+                            fetch("<%= locals.URL %>remove-cart-item", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ cookie: getCookie("remember"), item: this.parentElement.parentElement.getElementsByClassName("cart-item-description")[0].innerText })
+                            }).then(res => {
+                                if (res.ok) return res.json();
+                            }).then(data => {
+                                loadCartItems();
+                                //alert(data.message);
+                            })
+                        }
+
+                        let itemExists = false;
+
+                        for (let j = 0; j < cartItems.children.length; j++) {
+                            const child = cartItems.children[j];
+                            const d = child.querySelector(".cart-item-description");
+
+                            if (d.innerText == item) {
+                                itemExists = true;
+                                const quantity = child.querySelector(".cart-item-quantity");
+                                quantity.innerText = (Number(quantity.innerText.replaceAll("x", "")) + 1) + "x";
+                                const c = child.querySelector(".cart-item-cost");
+                                let total = Number(quantity.innerText.replaceAll("x", "")) * Number(data.costs[i]);
+                                // c.innerText.replace(/US $.*ea/, '').replaceAll("US $", "").replaceAll("ea", "").replaceAll("Total $", "").split(" ").forEach((item) => { 
+                                //     total += Number(data.costs[i]);
+                                // });
+                                c.innerText = "US $" + data.costs[i] + "ea" + " Total $" + total;
+                            }
+                        }
+
+                        if (!itemExists) {
+                            cartItems.appendChild(cartItemContainer);
+                            cartItemContainer.appendChild(cartItemDetails);
+                            cartItemDetails.appendChild(cartItemImage);
+                            cartItemDetails.appendChild(cartItemDescription);
+                            cartItemContainer.appendChild(cartItemCostContainer);
+                            cartItemCostContainer.appendChild(cartItemAmount);
+                            cartItemCostContainer.appendChild(cartItemCost);
+                            cartItemCostContainer.appendChild(cartItemRemoveButton);
+                        }
+                    })
+
+                    if (data.cart.length == 0) {
+                        const emptyCart = document.createElement("div");
+                        emptyCart.innerText = "Your cart is empty! Time to start shopping!";
+                        emptyCart.classList.add("empty");
+                        cartItems.appendChild(emptyCart);
+                    } else {
+                        const checkoutButton = document.createElement("button");
+                        checkoutButton.innerText = "Checkout";
+                        checkoutButton.classList.add("cart-checkout-button");
+                        cartItems.appendChild(checkoutButton);
+
+                        checkoutButton.onclick = function () {
+                            // fetch("/checkout-cart", {
+                            //     method: "POST",
+                            //     headers: {
+                            //         "Content-Type": "application/json"
+                            //     },
+                            //     body: JSON.stringify({ cookie: getCookie("remember") })
+                            // }).then(text => { return text.json() }).then(data => {
+                            //     window.location = data.url;
+                            // })
+
+                            fetch("<%= locals.URL %>get-checkout-url", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ cookie: getCookie("remember") })
+                            }).then((text) => {
+                                if (text.ok) {
+                                    return text.json();
+                                }
+                            }).then((url) => {
+                                window.location.href = url.url;
+                            })
+                        }
+                    }
+                })
+        }
+
+        window.onfocus = function () {
+            loadCartItems();
+        }
+
+        function arrContains(arr, item) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] == item) return true;
+            }
+            return false;
+        }
+    </script>
+    <script>
+        //search script
+        const searchBar = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-button");
+
+        searchButton.onclick = function () {
+            search();
+        }
+        window.onkeydown = function (e) {
+            if (e.key == "Enter") {
+                search();
+            }
+        }
+        function search() {
+            window.location = "/search/" + searchBar.value.replaceAll('"', "").replaceAll("'", "").replaceAll("-", "").replaceAll(" ", "_");
+        }
+    </script>
+</body>
+
+</html>
