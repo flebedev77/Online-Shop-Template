@@ -22,7 +22,7 @@
         <a class="signup-button" href="/signup" target="_blank">Signup</a>
         <a class="signup-button" href="/account">My account</a>
         <a class="signup-button" href="#"
-            onclick='document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });'>Sign
+            onclick='document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); window.location.reload();'>Sign
             out</a>
         <img src="imgs/cart.png" id="cart-button" />
     </nav>
