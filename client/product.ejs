@@ -24,7 +24,7 @@
         <a class="signup-button" href="<%= locals.URL %>signup" target="_blank">Signup</a>
         <a class="signup-button" href="<%= locals.URL %>account">My account</a>
         <a class="signup-button" href="#"
-            onclick='document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });'>Sign
+            onclick='document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); window.location.reload();'>Sign
             out</a>
         <img src="<%= locals.URL %>imgs/cart.png" id="cart-button" />
     </nav>
@@ -92,6 +92,8 @@
         </p>
     </footer>
 
+    <!-- URL is passed by the server which is the base hostname url WITH the / at the end -->
+    <script src="<%= locals.URL %>js/buttonManager.js"></script>
     <script>
         //product script
         const buyNowButton = document.getElementById("buyNowButton");
@@ -155,9 +157,9 @@
                 })
         }
 
-        window.onload = function () {
-            authenticated = authenticate(getCookie("remember"));
-        }
+        // window.onload = function () {
+        //     authenticated = authenticate(getCookie("remember"));
+        // }
     </script>
     <script>
         //cart script
