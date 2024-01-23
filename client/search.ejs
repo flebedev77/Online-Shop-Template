@@ -99,6 +99,7 @@
         </div>
     </main>
 
+    <script src="<%= locals.URL %>js/buttonManager.js"></script>
     <script>
         let authenticated = false;
         const cartButton = document.getElementById("cart-button");
@@ -354,9 +355,6 @@
 
         window.onfocus = function () {
             loadCartItems();
-        }
-        window.onload = function () {
-            authenticated = authenticate(getCookie("remember"));
         }
     </script>
     <script>

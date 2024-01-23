@@ -95,73 +95,6 @@
     <!-- URL is passed by the server which is the base hostname url WITH the / at the end -->
     <script src="<%= locals.URL %>js/buttonManager.js"></script>
     <script>
-        //product script
-        const buyNowButton = document.getElementById("buyNowButton");
-        const quantityAmountInput = document.getElementById("quantity-amount");
-        const adressOverlay = document.getElementsByClassName("adress-overlay")[0];
-        const cancelButton = document.getElementById("cancel-button");
-        const checkoutButton = document.getElementById("checkout-button");
-        const addToCartButton = document.getElementById("addToCartButton");
-        let cartItemstwo = document.getElementById("cartItems");
-
-        let pdesc = document.getElementById("product-description");
-
-        let authenticated = false;
-
-        // buyNowButton.onclick = function () {
-        //     adressOverlay.style.visibility = "visible";
-        // }
-        // cancelButton.onclick = function () {
-        //     adressOverlay.style.visibility = "hidden";
-        // }
-        pdesc.innerText = "<%= description %>";
-
-        buyNowButton.onclick = function () {
-            //checkout();
-            window.location.href = ("<%= locals.URL %>checkout/" + "<%= locals.itemId %>" + "$quantity=" + quantityAmountInput.value).replaceAll(" ", "_");
-        }
-
-        addToCartButton.onclick = function () {
-            const data = {
-                cookie: getCookie("remember"),
-                cart: "<%= locals.itemId %>",
-                quantity: Number(quantityAmountInput.value)
-            }
-            fetch("<%= locals.URL %>add-cart", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            })
-            setTimeout(function () {
-                openCart();
-            }, 1000);
-        }
-
-        function checkout() {
-            const items = [
-                { id: Number("<%= locals.itemId %>"), quantity: Number(quantityAmountInput.value) }
-            ];
-            fetch("<%= locals.URL %>create-checkout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(items)
-            }).then(res => {
-                if (res.ok) return res.json();
-            })
-                .then(({ url }) => {
-                    window.location.href = url;
-                })
-        }
-
-        // window.onload = function () {
-        //     authenticated = authenticate(getCookie("remember"));
-        // }
-    </script>
-    <script>
         //cart script
         const cartButton = document.getElementById("cart-button");
         const cartItems = document.getElementById("cartItems");
@@ -316,6 +249,73 @@
             }
             return false;
         }
+    </script>
+    <script>
+        //product script
+        const buyNowButton = document.getElementById("buyNowButton");
+        const quantityAmountInput = document.getElementById("quantity-amount");
+        const adressOverlay = document.getElementsByClassName("adress-overlay")[0];
+        const cancelButton = document.getElementById("cancel-button");
+        const checkoutButton = document.getElementById("checkout-button");
+        const addToCartButton = document.getElementById("addToCartButton");
+        let cartItemstwo = document.getElementById("cartItems");
+
+        let pdesc = document.getElementById("product-description");
+
+        let authenticated = false;
+
+        // buyNowButton.onclick = function () {
+        //     adressOverlay.style.visibility = "visible";
+        // }
+        // cancelButton.onclick = function () {
+        //     adressOverlay.style.visibility = "hidden";
+        // }
+        pdesc.innerText = "<%= description %>";
+
+        buyNowButton.onclick = function () {
+            //checkout();
+            window.location.href = ("<%= locals.URL %>checkout/" + "<%= locals.itemId %>" + "$quantity=" + quantityAmountInput.value).replaceAll(" ", "_");
+        }
+
+        addToCartButton.onclick = function () {
+            const data = {
+                cookie: getCookie("remember"),
+                cart: "<%= locals.itemId %>",
+                quantity: Number(quantityAmountInput.value)
+            }
+            fetch("<%= locals.URL %>add-cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            setTimeout(function () {
+                loadCartItems();
+            }, 1000);
+        }
+
+        function checkout() {
+            const items = [
+                { id: Number("<%= locals.itemId %>"), quantity: Number(quantityAmountInput.value) }
+            ];
+            fetch("<%= locals.URL %>create-checkout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(items)
+            }).then(res => {
+                if (res.ok) return res.json();
+            })
+                .then(({ url }) => {
+                    window.location.href = url;
+                })
+        }
+
+        // window.onload = function () {
+        //     authenticated = authenticate(getCookie("remember"));
+        // }
     </script>
     <script>
         //search script

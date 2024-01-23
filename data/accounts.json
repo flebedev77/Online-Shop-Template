@@ -1,2 +1,5 @@
 {"username":"test","password":"test","cart":["1","1","1","1","1","1","1","1","2","2","2","2","2"],"_id":"08u42G4q3bUsXZWT"}
 {"username":"1","password":"1","cart":[],"_id":"HQHoe6x0IbpwlZYJ"}
+{"username":"1","password":"1","cart":["1"],"_id":"HQHoe6x0IbpwlZYJ"}
+{"username":"1","password":"1","cart":["1","1"],"_id":"HQHoe6x0IbpwlZYJ"}
+{"username":"1","password":"1","cart":["1","1","1"],"_id":"HQHoe6x0IbpwlZYJ"}
