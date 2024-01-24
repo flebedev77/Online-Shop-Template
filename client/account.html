@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+    <link rel="stylesheet" href="css/common-style.css">
+    <link rel="stylesheet" href="css/account-style.css">
+</head>
+<body>
+    <nav class="navigation-bar">
+        <a class="logo" href="/"><img src="imgs/logo.png" /></a>
+        <div class="search-bar">
+            <input id="search-input" type="text" placeholder="Search for anything" spellcheck="false"
+                autocomplete="off" />
+            <button id="search-button" class="blue-button">Search</button>
+        </div>
+        <a class="login-button" href="/login" target="_blank">Login</a>
+        <a class="signup-button" href="/signup" target="_blank">Signup</a>
+        <a class="signup-button" href="/">&nbsp;&nbsp;Home&nbsp;&nbsp;</a>
+        <a class="signup-button" href="#"
+            onclick='document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); window.location.reload();'>Sign
+            out</a>
+        <img src="imgs/cart.png" id="cart-button" />
+    </nav>
+    <div class="cart-items" id="cartItems">
+    </div>
+
+    <main>
+        <div id="userDetails">
+            <div id="username">USERNAME</div>
+            <div class="profile-class">Your personal account</div>
+        </div>
+        <div class="settings">
+            <div class="sidebar">
+                <span class="setting-group">
+                    <img/>
+                    <p>My account</p>
+                </span>
+            </div>
+            <div class="content">
+
+            </div>
+        </div>
+    </main>
+
+    <script src="js/buttonManager.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

@@ -65,6 +65,11 @@ app.get("/signup", (req, res) => {
     res.sendFile(__dirname + "/client/signup.html");
 })
 
+//account page
+app.get("/account", (req, res) => {
+    res.sendFile(__dirname + "/client/account.html");
+})
+
 //signup form
 app.post("/signup", async (req, res) => {
     console.log("Account created: " + JSON.stringify(req.body));

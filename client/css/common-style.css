@@ -175,6 +175,12 @@
     z-index: -1;
 }
 
+@media (max-width: 700px) {
+    .cart-items {
+        top: 150px !important;
+    }
+}
+
 .cart-items {
     position: fixed;
     top: 51px;

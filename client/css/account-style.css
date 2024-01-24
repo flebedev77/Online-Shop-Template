@@ -1,0 +1,19 @@
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+main {
+    margin: 50px;
+    margin-top: 100px;
+    background: #eeeeee;
+}
+#userDetails {
+    font-weight: bold;
+    font-size: 18px;
+    color: #1d1d1d;
+}
+#userDetails > .profile-class {
+    font-weight: lighter;
+    color: #6e6e6e;
+    font-size: 15px;
+}
