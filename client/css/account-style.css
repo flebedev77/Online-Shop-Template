@@ -76,3 +76,24 @@ hr {
 .content button:hover {
     background: rgba(40, 125, 40, 0.922);
 }
+
+.content p {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.content h3 {
+    font-weight: 500;
+    margin-bottom: 10px;
+    margin-top: 30px;
+    font-size: 17px;
+}
+
+.content h1 {
+    font-size: 22px;
+    margin-top: 50px;
+}
+
+.content #general {
+    margin-top: 0;
+}

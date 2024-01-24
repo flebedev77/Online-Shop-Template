@@ -43,7 +43,7 @@ async function authenticate(hash) {
     })
 }
 
-window.onload = function () {
+window.addEventListener("load", function() {
     //returns a list of [Sign up button, My account button, Sign out button]
     const Signup = document.getElementsByClassName("signup-button");
 
@@ -65,4 +65,4 @@ window.onload = function () {
             Signup[2].style.display = ""
         }
     })
-}
+})

@@ -495,6 +495,26 @@ app.post("/get-checkout-url", (req, res) => {
     })
 })
 
+app.post("/get-username", (req, res) => {
+    //decode the cookie
+    const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
+
+    //get the username and password into seperate variables
+    const username = cookie.split(":")[0];
+    const password = cookie.split(":")[1];
+
+    //find the user with the specified username
+    accounts.findOne({ username: username }, function(err, doc) {
+        //error handling
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        res.json({ username: doc.username })
+    })
+})
+
 app.post("/create-checkout", async (req, res) => {
 
     const session = await stripe.checkout.sessions.create({

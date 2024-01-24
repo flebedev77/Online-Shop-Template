@@ -47,7 +47,7 @@
                     </span>
                 </a>
                 <hr>
-                <a>
+                <a href="#password">
                     <span class="setting-group">
                         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
                             data-view-component="true" class="octicon octicon-shield-lock">
@@ -58,7 +58,7 @@
                         <p>Passwords and security</p>
                     </span>
                 </a>
-                <a>
+                <a href="#shop-cart">
                     <span class="setting-group">
                         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
                             data-view-component="true" class="octicon octicon-apps">
@@ -71,17 +71,43 @@
                 </a>
             </div>
             <div class="content">
+
                 <h1 id="general">Your Account Settings</h1>
                 <hr>
-                <h3>Username</h3>
+                <h3>Change username</h3>
                 <input class="setting-input" type="text" id="change-username-input" placeholder="New username" />
                 <button>Change</button>
+                <p>Changing your username might take some moments to take action</p>
+                <h1 id="password">Password settings</h1>
+                <hr>
+                <p>Setting which have something to do with your password</p>
+                <h1 id="reset-pswd">Reset password</h1>
+                <hr>
+                <br>
+                <input class="setting-input" type="text" id="old-password-input" placeholder="Old password" /><br>
+                <p style="margin-block: 5px;">The old password</p>
+                <input class="setting-input" type="text" id="new-password-input" placeholder="New password" /><br>
+                <p style="margin-block: 5px;">The password you want to change to</p>
+                <input class="setting-input" type="text" id="cnfrm-password-input" placeholder="Confirm password" />
+                <p style="margin-block: 5px;">Confirm the new password</p>
+                <button>Set password</button>
+                <br>
+                <h1 id="forgot-pass">Forgot password</h1>
+                <hr>
+                <br>
+                <input class="setting-input" type="email" id="forgot-pass-email" placeholder="Your email" />
+                <button>Send password</button>
             </div>
         </div>
     </main>
 
     <script src="js/buttonManager.js"></script>
     <script src="js/cart.js"></script>
+
+    <!-- Account page unique scripts -->
+    <script src="js/cookieRemember.js"></script>
+    <script src="js/authenticator.js"></script>
+    <script src="js/accountPage.js"></script>
 </body>
 
 </html>
