@@ -1,3 +1,5 @@
+# E-commerce buisness website template
+
 Prequesits:\n
     1. Have a modern version of nodejs installed\n
     2. Have a stripe account\n
