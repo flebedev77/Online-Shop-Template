@@ -557,9 +557,9 @@ app.post("/change-password", (req, res) => {
 app.post("/admin-login", (req, res) => {
     admin.find({ username: req.body.username, password: req.body.password }, function(err, docs) {
         if (docs.length == 0) {
-            res.json({ message: "Account dosent exist" });
+            res.json({ message: "Account dosent exist", ok: false, data: null });
         } else {
-            res.json({ message: "Success" });
+            res.json({ message: "Success", data: orderedProducts.getAllData(), ok: true });
         }
     })
 })
@@ -624,7 +624,7 @@ app.get("/verification/:token", (req, res) => {
 });
 
 function generateToken(len) {
-    const chars = "1234567890-=qwertyuiop[]asdfghjklzxcvcbvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+    const chars = "qwertyuiopasdfghjklzxcvcbvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
     let t = "";
     for(let i = 0; i < len; i++) {
         t += chars.charAt(Math.floor(Math.random() * chars.length));

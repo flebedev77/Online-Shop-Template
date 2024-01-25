@@ -13,5 +13,9 @@ loginButton.onclick = function () {
         if (res.ok) return res.json()
     }).then((data) => {
         alert(data.message);
+
+        if (data.ok) {
+            console.log(data.data);
+        }
     })
 }
