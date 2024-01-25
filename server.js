@@ -28,6 +28,7 @@ const author = "© flebedev77";
 const Datastore = require("nedb")
 const products = new Datastore({ filename: 'data/products.json', autoload: true });
 const accounts = new Datastore({ filename: "data/accounts.json", autoload: true });
+const admin = new Datastore({ filename: "data/admin.json", autoload: true });
 
 app.set("views", "client");
 app.set("view engine", "ejs");
