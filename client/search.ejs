@@ -101,7 +101,6 @@
 
     <script src="<%= locals.URL %>js/buttonManager.js"></script>
     <script>
-        let authenticated = false;
         const cartButton = document.getElementById("cart-button");
         const cartItems = document.getElementById("cartItems");
         const productContainer = document.querySelector(".product-container");
@@ -227,8 +226,8 @@
         function loadCartItems() {
 
             if (authenticated == false) {
-                alert("Log in to add items to your cart");
-                return;
+                //alert("Log in to add items to your cart");
+                //return;
             }
             cartItems.innerHTML = ""; //clear the cart DOM
 
@@ -326,15 +325,6 @@
                         cartItems.appendChild(checkoutButton);
 
                         checkoutButton.onclick = function () {
-                            // fetch("<%= locals.URL %>checkout-cart", {
-                            //     method: "POST",
-                            //     headers: {
-                            //         "Content-Type": "application/json"
-                            //     },
-                            //     body: JSON.stringify({ cookie: getCookie("remember") })
-                            // }).then(text => { return text.json() }).then(data => {
-                            //     window.location = data.url;
-                            // })
                             fetch("/get-checkout-url", {
                                 method: "POST",
                                 headers: {
@@ -357,23 +347,7 @@
             loadCartItems();
         }
     </script>
-    <script>
-        //search script
-        const searchBar = document.getElementById("search-input");
-        const searchButton = document.getElementById("search-button");
-
-        searchButton.onclick = function () {
-            search();
-        }
-        window.onkeydown = function (e) {
-            if (e.key == "Enter") {
-                search();
-            }
-        }
-        function search() {
-            window.location = "/search/" + searchBar.value.replaceAll('"', "").replaceAll("'", "").replaceAll("-", "").replaceAll(" ", "_");
-        }
-    </script>
+    <script src="<%= locals.URL %>js/search.js"></script>
 </body>
 
 </html>

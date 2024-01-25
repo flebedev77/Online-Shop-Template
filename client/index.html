@@ -239,23 +239,7 @@
         }
 
     </script>
-    <script>
-        //search script
-        const searchBar = document.getElementById("search-input");
-        const searchButton = document.getElementById("search-button");
-
-        searchButton.onclick = function () {
-            search();
-        }
-        window.onkeydown = function (e) {
-            if (e.key == "Enter") {
-                search();
-            }
-        }
-        function search() {
-            window.location = "/search/" + searchBar.value.replaceAll('"', "").replaceAll("'", "").replaceAll("-", "").replaceAll(" ", "_");
-        }
-    </script>
+    <script src="js/search.js"></script>
     <script src="js/cart.js"></script>
 </body>
 

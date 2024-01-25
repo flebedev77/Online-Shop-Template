@@ -1,5 +1,6 @@
 //this script is responsible for hiding unessesary buttons
 // eg Dont show the login button when logged in
+let authenticated = false;
 
 function setCookie(cname, cvalue, exdays) {
     const d = new Date();

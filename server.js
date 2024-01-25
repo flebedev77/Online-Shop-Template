@@ -163,8 +163,8 @@ app.post("/add-cart", (req, res) => {
     const username = cookie.split(":")[0];
     const password = cookie.split(":")[1];
 
-    accounts.find({ username, password }, (err, docs) => {
-        docs.forEach((doc) => {
+    accounts.findOne({ username, password }, (err, doc) => {
+        if (doc.cart) {
             const combinedCart = doc.cart;
             for (let i = 0; i < Number(req.body.quantity); i++) {
                 combinedCart.push(req.body.cart);
@@ -173,7 +173,7 @@ app.post("/add-cart", (req, res) => {
                 console.log("Added " + JSON.stringify(req.body.cart) + " to " + username);
                 res.json({ message: "sucess" })
             })
-        })
+        }
     })
 })
 
@@ -543,7 +543,7 @@ app.post("/change-password", (req, res) => {
 
     //check if the old password is right
     if (user.password == req.body.oldPassword) {
-        accounts.update({ username: user.username, password: user.password }, { username: user.username, password: req.body.newPassword }, {}, function(err, num) {
+        accounts.update({ username: user.username, password: user.password }, { username: user.username, password: req.body.newPassword }, {}, function (err, num) {
             res.json({ message: "Sucessfully changed your password", cookie: encodeCookie(user.username, req.body.newPassword) })
         });
     } else {

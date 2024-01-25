@@ -250,18 +250,9 @@
 
         let pdesc = document.getElementById("product-description");
 
-        let authenticated = false;
-
-        // buyNowButton.onclick = function () {
-        //     adressOverlay.style.visibility = "visible";
-        // }
-        // cancelButton.onclick = function () {
-        //     adressOverlay.style.visibility = "hidden";
-        // }
         pdesc.innerText = "<%= description %>";
 
         buyNowButton.onclick = function () {
-            //checkout();
             window.location.href = ("<%= locals.URL %>checkout/" + "<%= locals.itemId %>" + "$quantity=" + quantityAmountInput.value).replaceAll(" ", "_");
         }
 
@@ -281,7 +272,7 @@
                 if (res.ok) return res.json();
                 else console.error("Server did not respond");
             }).then((data) => {
-                alert(data.message);
+                //alert(data.message);
                 loadCartItems();
                 cartItems.style.visibility = "visible";
                 cartItemsHidden = false;
@@ -305,28 +296,8 @@
                     window.location.href = url;
                 })
         }
-
-        // window.onload = function () {
-        //     authenticated = authenticate(getCookie("remember"));
-        // }
     </script>
-    <script>
-        //search script
-        const searchBar = document.getElementById("search-input");
-        const searchButton = document.getElementById("search-button");
-
-        searchButton.onclick = function () {
-            search();
-        }
-        window.onkeydown = function (e) {
-            if (e.key == "Enter") {
-                search();
-            }
-        }
-        function search() {
-            window.location = "/search/" + searchBar.value.replaceAll('"', "").replaceAll("'", "").replaceAll("-", "").replaceAll(" ", "_");
-        }
-    </script>
+    <script src="<%= locals.URL %>js/search.js"></script>
 </body>
 
 </html>
