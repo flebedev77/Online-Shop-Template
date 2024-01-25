@@ -67,6 +67,12 @@ function loadCartItems() {
                 cartItemAmount.innerText = "1x";
                 cartItemAmount.classList.add("cart-item-quantity");
 
+                const cartRemoveAmount = document.createElement("input");
+                cartRemoveAmount.type = "number";
+                cartRemoveAmount.min = "1";
+                cartRemoveAmount.max = "100000000";
+                cartRemoveAmount.placeholder = "Delete amount";
+
                 const cartItemRemoveButton = document.createElement("img");
                 cartItemRemoveButton.classList.add("cart-remove-button");
                 cartItemRemoveButton.src = "./imgs/close.png";
@@ -77,7 +83,7 @@ function loadCartItems() {
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({ cookie: getCookie("remember"), item: this.parentElement.parentElement.getElementsByClassName("cart-item-description")[0].innerText })
+                        body: JSON.stringify({ cookie: getCookie("remember"), item: this.parentElement.parentElement.getElementsByClassName("cart-item-description")[0].innerText, deleteAmount: Number(cartRemoveAmount.value) })
                     }).then(res => {
                         if (res.ok) return res.json();
                     }).then(data => {
@@ -96,6 +102,7 @@ function loadCartItems() {
                         const quantity = child.querySelector(".cart-item-quantity");
                         quantity.innerText = (Number(quantity.innerText.replaceAll("x", "")) + 1) + "x";
                         const c = child.querySelector(".cart-item-cost");
+                        child.querySelector("input").max = quantity.innerText.replaceAll("x", "");
                         let total = Number(quantity.innerText.replaceAll("x", "")) * Number(data.costs[i]);
                         // c.innerText.replace(/US $.*ea/, '').replaceAll("US $", "").replaceAll("ea", "").replaceAll("Total $", "").split(" ").forEach((item) => { 
                         //     total += Number(data.costs[i]);
@@ -113,6 +120,7 @@ function loadCartItems() {
                     cartItemCostContainer.appendChild(cartItemAmount);
                     cartItemCostContainer.appendChild(cartItemCost);
                     cartItemCostContainer.appendChild(cartItemRemoveButton);
+                    cartItemCostContainer.appendChild(cartRemoveAmount);
                 }
             })
 

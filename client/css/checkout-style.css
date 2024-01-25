@@ -158,3 +158,10 @@ button {
     margin-right: 10px;
     margin-top: -6px;
 }
+
+#Logo {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    width: 100px;
+}

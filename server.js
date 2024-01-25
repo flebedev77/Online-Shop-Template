@@ -214,31 +214,29 @@ app.post("/remove-cart-item", (req, res) => {
     const username = cookie.split(":")[0];
     const password = cookie.split(":")[1];
 
-    accounts.find({ username, password }, (err, docs) => {
-        docs.forEach((doc) => {
-            //get the product id from name
-            let id = 0;
-            let combinedCart = doc.cart;
-            let deletedOne = false;
-            storeItems.forEach((value, i) => {
-                if (value.name == req.body.item) id = i;
-            })
+    accounts.findOne({ username, password }, (err, doc) => {
+        //get the product id from name
+        let id = 0;
+        let combinedCart = doc.cart;
+        let deleteAmount = 0;
+        storeItems.forEach((value, i) => {
+            if (value.name == req.body.item) id = i;
+        })
 
-            //make a new array which will be the new cart items and find an item with the is specified and delete
-            for (let i = doc.cart.length - 1; i >= 0; i--) {
-                if (deletedOne) continue;
-                let item = doc.cart[i];
-                if (item == id) {
-                    combinedCart.splice(i, 1);
-                    deletedOne = true;
-                }
+        //make a new array which will be the new cart items and find an item with the is specified and delete
+        for (let i = doc.cart.length - 1; i >= 0; i--) {
+            if (deleteAmount >= req.body.deleteAmount) continue;
+            let item = doc.cart[i];
+            if (item == id) {
+                combinedCart.splice(i, 1);
+                deleteAmount++;
             }
+        }
 
-            //update the database and respond
-            accounts.update({ username, password }, { username, password, cart: combinedCart }, {}, function (err, num) {
-                console.log("Removed " + JSON.stringify(id) + " to " + username);
-                res.json({ message: "Sucessfully removed the item " });
-            })
+        //update the database and respond
+        accounts.update({ username, password }, { username, password, cart: combinedCart }, {}, function (err, num) {
+            console.log("Removed " + JSON.stringify(id) + " to " + username);
+            res.json({ message: "Sucessfully removed the item " });
         })
     })
 })
