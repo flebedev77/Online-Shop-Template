@@ -30,6 +30,8 @@ const orderedProducts = new Datastore({ filename: 'data/ordered_products.json', 
 const accounts = new Datastore({ filename: "data/accounts.json", autoload: true });
 const admin = new Datastore({ filename: "data/admin.json", autoload: true });
 
+const MAX_TOKEN_USERS = 10;
+
 app.set("views", "client");
 app.set("view engine", "ejs");
 
@@ -567,6 +569,10 @@ let checkoutVerification = [];
 app.post("/create-checkout", async (req, res) => {
     //orderedProducts.insert(req.body);
 
+    if (checkoutVerification.length > MAX_TOKEN_USERS) {
+        checkoutVerification.splice(0, 1);
+    }
+
     //generate a random token 20 characters long
     const token = generateToken(20);
 
@@ -607,6 +613,8 @@ app.get("/verification/:token", (req, res) => {
 
             orderedProducts.insert(ver.data);
             res.redirect(URL + "success.html");
+
+            checkoutVerification.splice(i, 1);
         }
     });
 
