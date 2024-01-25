@@ -174,3 +174,31 @@ usernameButton.onclick = function() {
         alert("New username is invalid PS: can't have spaces");
     }
 }
+
+//changing password
+const oldPasswordInput = document.getElementById("old-password-input");
+const newPasswordInput = document.getElementById("new-password-input");
+const confirmPasswordInput = document.getElementById("cnfrm-password-input");
+const setPasswordButton = document.getElementById("set-password-button");
+
+setPasswordButton.onclick = function() {
+    if (newPasswordInput.value == confirmPasswordInput.value) {
+        fetch("/change-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ cookie: getCookie("remember"), oldPassword: oldPasswordInput.value, newPassword: newPasswordInput.value })
+        }).then((res) => {
+            if (res.ok) return res.json();
+        }).then((data) => {
+            newPasswordInput.value = "";
+            confirmPasswordInput.value = "";
+            oldPasswordInput.value = "";
+            setCookie("remember", data.cookie, 1);
+            alert(data.message);
+        });
+    } else {
+        alert("The confirm password and new passwords dont match");
+    }
+}

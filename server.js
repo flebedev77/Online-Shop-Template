@@ -520,11 +520,10 @@ app.post("/get-username", (req, res) => {
 
 app.post("/change-username", (req, res) => {
     //decode the cookie
-    const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
+    const user = decodeCredentialCookie(req.body.cookie); //returns an object with username and password
 
-    //get the username and password into seperate variables
-    const username = cookie.split(":")[0];
-    const password = cookie.split(":")[1];
+    const username = user.username;
+    const password = user.password;
 
     //check is the new username is valid
     if (req.body.username.trim() != "" && req.body.username.length <= 100) {
@@ -532,14 +531,26 @@ app.post("/change-username", (req, res) => {
             console.log("Changed username from " + username + " to " + req.body.username);
 
             //generate new cookie
-            let cookie = req.body.username + ":" + password;
-            //encode cookie
-            cookie = Buffer.from(cookie).toString('base64');
+            let cookie = encodeCookie(req.body.username, password);
 
             res.json({ message: "Sucessfully changed username to " + req.body.username, cookie });
         })
     }
 });
+
+app.post("/change-password", (req, res) => {
+    const user = decodeCredentialCookie(req.body.cookie);
+
+    //check if the old password is right
+    if (user.password == req.body.oldPassword) {
+        accounts.update({ username: user.username, password: user.password }, { username: user.username, password: req.body.newPassword }, {}, function(err, num) {
+            res.json({ message: "Sucessfully changed your password", cookie: encodeCookie(user.username, req.body.newPassword) })
+        });
+    } else {
+        //if the password is wrong send the old cookie and tell the user that the password was wrong
+        res.json({ message: "Old password wrong", cookie: req.body.cookie });
+    }
+})
 
 app.post("/create-checkout", async (req, res) => {
 
@@ -580,3 +591,20 @@ app.use((err, req, res, next) => {
         author
     });
 })
+
+function decodeCredentialCookie(cookie) {
+    //decode the cookie
+    const c = Buffer.from(cookie, 'base64').toString('ascii');
+
+    //get the username and password into seperate variables
+    const username = c.split(":")[0];
+    const password = c.split(":")[1];
+
+    return { username, password };
+}
+
+function encodeCookie(username, password) {
+    let cookie = username + ":" + password;
+    //encode cookie
+    return Buffer.from(cookie).toString('base64');
+}
