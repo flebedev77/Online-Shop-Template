@@ -23,7 +23,7 @@ const storeItems = new Map([
 
 //make sure to change to actual domain in production
 const URL = `http://127.0.0.1:${port}/`; //my local development ip
-const author = "© Fedya";
+const author = "© flebedev77";
 
 const Datastore = require("nedb")
 const products = new Datastore({ filename: 'data/products.json', autoload: true });
@@ -171,6 +171,7 @@ app.post("/add-cart", (req, res) => {
             }
             accounts.update({ username, password }, { username, password, cart: combinedCart }, {}, function (err, num) {
                 console.log("Added " + JSON.stringify(req.body.cart) + " to " + username);
+                res.json({ message: "sucess" })
             })
         })
     })
@@ -186,16 +187,18 @@ app.post("/get-cart", (req, res) => {
 
     accounts.find({ username, password }, (err, docs) => {
         docs.forEach((doc) => {
-            const cart = doc.cart.map((item) => {
-                return storeItems.get(Number(item)).name;
-            })
-            const costs = doc.cart.map((item) => {
-                return storeItems.get(Number(item)).priceInCents / 100;
-            })
-            const keys = doc.cart.map((item) => {
-                return item
-            })
-            res.json({ cart, costs, keys });
+            if (doc.cart) {
+                const cart = doc.cart.map((item) => {
+                    return storeItems.get(Number(item)).name;
+                })
+                const costs = doc.cart.map((item) => {
+                    return storeItems.get(Number(item)).priceInCents / 100;
+                })
+                const keys = doc.cart.map((item) => {
+                    return item
+                })
+                res.json({ cart, costs, keys });
+            }
         })
         if (docs.length == 0) {
             res.json({ cart: [], costs: [], keys: [] })
@@ -501,19 +504,42 @@ app.post("/get-username", (req, res) => {
 
     //get the username and password into seperate variables
     const username = cookie.split(":")[0];
-    const password = cookie.split(":")[1];
+    //const password = cookie.split(":")[1];
 
     //find the user with the specified username
-    accounts.findOne({ username: username }, function(err, doc) {
+    accounts.findOne({ username: username }, function (err, doc) {
         //error handling
         if (err) {
             console.error(err);
             return;
         }
 
-        res.json({ username: doc.username })
+        res.json({ username: doc.username });
     })
-})
+});
+
+app.post("/change-username", (req, res) => {
+    //decode the cookie
+    const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
+
+    //get the username and password into seperate variables
+    const username = cookie.split(":")[0];
+    const password = cookie.split(":")[1];
+
+    //check is the new username is valid
+    if (req.body.username.trim() != "" && req.body.username.length <= 100) {
+        accounts.update({ username, password }, { username: req.body.username, password }, {}, function (err, num) {
+            console.log("Changed username from " + username + " to " + req.body.username);
+
+            //generate new cookie
+            let cookie = req.body.username + ":" + password;
+            //encode cookie
+            cookie = Buffer.from(cookie).toString('base64');
+
+            res.json({ message: "Sucessfully changed username to " + req.body.username, cookie });
+        })
+    }
+});
 
 app.post("/create-checkout", async (req, res) => {
 

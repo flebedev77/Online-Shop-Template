@@ -180,9 +180,7 @@
                                 quantity.innerText = (Number(quantity.innerText.replaceAll("x", "")) + 1) + "x";
                                 const c = child.querySelector(".cart-item-cost");
                                 let total = Number(quantity.innerText.replaceAll("x", "")) * Number(data.costs[i]);
-                                // c.innerText.replace(/US $.*ea/, '').replaceAll("US $", "").replaceAll("ea", "").replaceAll("Total $", "").split(" ").forEach((item) => { 
-                                //     total += Number(data.costs[i]);
-                                // });
+
                                 c.innerText = "US $" + data.costs[i] + "ea" + " Total $" + total;
                             }
                         }
@@ -211,16 +209,6 @@
                         cartItems.appendChild(checkoutButton);
 
                         checkoutButton.onclick = function () {
-                            // fetch("/checkout-cart", {
-                            //     method: "POST",
-                            //     headers: {
-                            //         "Content-Type": "application/json"
-                            //     },
-                            //     body: JSON.stringify({ cookie: getCookie("remember") })
-                            // }).then(text => { return text.json() }).then(data => {
-                            //     window.location = data.url;
-                            // })
-
                             fetch("<%= locals.URL %>get-checkout-url", {
                                 method: "POST",
                                 headers: {
@@ -289,10 +277,15 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(data)
-            })
-            setTimeout(function () {
+            }).then(res => {
+                if (res.ok) return res.json();
+                else console.error("Server did not respond");
+            }).then((data) => {
+                alert(data.message);
                 loadCartItems();
-            }, 1000);
+                cartItems.style.visibility = "visible";
+                cartItemsHidden = false;
+            })
         }
 
         function checkout() {

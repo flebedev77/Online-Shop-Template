@@ -30,17 +30,18 @@ function loadCartItems() {
 
     cartItems.innerHTML = ""; //clear the cart DOM
 
-    fetch("/get-cart", {
+    fetch("/get-cart", { //ask the server for the user's cart
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ cookie: getCookie("remember") })
+        body: JSON.stringify({ cookie: getCookie("remember") }) //tell the server the user
     }).then(res => {
         if (res.ok) return res.json();
     })
-        .then((data) => {
+        .then((data) => { //for every item the server sends us
             data.cart.forEach((item, i) => {
+                //create a item container
                 const cartItemContainer = document.createElement("div");
                 cartItemContainer.classList.add("cart-item");
 
@@ -81,7 +82,6 @@ function loadCartItems() {
                         if (res.ok) return res.json();
                     }).then(data => {
                         loadCartItems();
-                        //alert(data.message);
                     })
                 }
 
@@ -128,16 +128,6 @@ function loadCartItems() {
                 cartItems.appendChild(checkoutButton);
 
                 checkoutButton.onclick = function () {
-                    // fetch("/checkout-cart", {
-                    //     method: "POST",
-                    //     headers: {
-                    //         "Content-Type": "application/json"
-                    //     },
-                    //     body: JSON.stringify({ cookie: getCookie("remember") })
-                    // }).then(text => { return text.json() }).then(data => {
-                    //     window.location = data.url;
-                    // })
-
                     fetch("/get-checkout-url", {
                         method: "POST",
                         headers: {
@@ -154,4 +144,33 @@ function loadCartItems() {
                 }
             }
         })
+}
+
+
+//changing username
+const newUsernameInput = document.getElementById("change-username-input");
+const usernameButton = document.getElementById("username-button");
+
+usernameButton.onclick = function() {
+    //check if inputted username is valid the server also checks this
+    if (newUsernameInput.value.length <= 100 && newUsernameInput.value.trim() != "") {
+        //ask the server to change the username
+        fetch("/change-username", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ cookie: getCookie("remember"), username: newUsernameInput.value })
+        }).then((res) => {
+            if (res.ok) return res.json();
+        }).then((data) => {
+            setCookie("remember", data.cookie, 1);
+            alert(data.message);
+            window.location.reload();
+        })
+    } else if (newUsernameInput.value.length > 100) {
+        alert("Username can't be longer than 100 characters");
+    } else {
+        alert("New username is invalid PS: can't have spaces");
+    }
 }

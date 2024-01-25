@@ -58,7 +58,7 @@
                         <p>Passwords and security</p>
                     </span>
                 </a>
-                <a href="#shop-cart">
+                <a href="#cart-section">
                     <span class="setting-group">
                         <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
                             data-view-component="true" class="octicon octicon-apps">
@@ -78,8 +78,8 @@
 
                 <!-- Change username dom -->
                 <h3>Change username</h3>
-                <input class="setting-input" type="text" id="change-username-input" placeholder="New username" />
-                <button>Change</button>
+                <input class="setting-input" type="text" id="change-username-input" placeholder="New username" spellcheck="false" />
+                <button id="username-button">Change</button>
                 <p>Changing your username might take some moments to take action</p>
                 
                 <!-- Password settings section -->
@@ -92,11 +92,11 @@
                 <hr>
                 <br>
 
-                <input class="setting-input" type="text" id="old-password-input" placeholder="Old password" /><br>
+                <input class="setting-input" type="text" id="old-password-input" placeholder="Old password" spellcheck="false" /><br>
                 <p style="margin-block: 5px;">The old password</p>
-                <input class="setting-input" type="text" id="new-password-input" placeholder="New password" /><br>
+                <input class="setting-input" type="text" id="new-password-input" placeholder="New password" spellcheck="false" /><br>
                 <p style="margin-block: 5px;">The password you want to change to</p>
-                <input class="setting-input" type="text" id="cnfrm-password-input" placeholder="Confirm password" />
+                <input class="setting-input" type="text" id="cnfrm-password-input" placeholder="Confirm password" spellcheck="false" />
                 <p style="margin-block: 5px;">Confirm the new password</p>
                 <button>Set password</button>
 
@@ -125,6 +125,11 @@
             </div>
         </div>
     </main>
+
+    <footer>
+        <p>© flebedev77 2023</p>
+        <p class="support">Need help? Email our team lorem@ipsum.com</p>
+    </footer>
 
     <script src="js/buttonManager.js"></script>
     <script src="js/cart.js"></script>
