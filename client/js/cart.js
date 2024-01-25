@@ -15,7 +15,7 @@ cartButton.onclick = function () {
 function loadCartItems() {
     cartItems.innerHTML = ""; //clear the cart DOM
 
-    fetch("/get-cart", {
+    fetch("http://" + window.location.host + "/get-cart", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -34,7 +34,7 @@ function loadCartItems() {
 
                 const cartItemImage = document.createElement("img");
                 cartItemImage.classList.add("cart-item-image");
-                cartItemImage.src = "imgs/products/" + data.keys[i] + ".jpg";
+                cartItemImage.src = "http://" + window.location.host + "/imgs/products/" + data.keys[i] + ".jpg";
 
                 const cartItemDescription = document.createElement("div");
                 cartItemDescription.classList.add("cart-item-description");
@@ -53,10 +53,10 @@ function loadCartItems() {
 
                 const cartItemRemoveButton = document.createElement("img");
                 cartItemRemoveButton.classList.add("cart-remove-button");
-                cartItemRemoveButton.src = "./imgs/close.png";
+                cartItemRemoveButton.src = "http://" + window.location.host + "/imgs/close.png";
 
                 cartItemRemoveButton.onclick = function () {
-                    fetch("/remove-cart-item", {
+                    fetch("http://" + window.location.host + "/remove-cart-item", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -123,7 +123,7 @@ function loadCartItems() {
                     //     window.location = data.url;
                     // })
 
-                    fetch("/get-checkout-url", {
+                    fetch("http://" + window.location.host + "/get-checkout-url", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"

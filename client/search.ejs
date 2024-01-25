@@ -101,8 +101,6 @@
 
     <script src="<%= locals.URL %>js/buttonManager.js"></script>
     <script>
-        const cartButton = document.getElementById("cart-button");
-        const cartItems = document.getElementById("cartItems");
         const productContainer = document.querySelector(".product-container");
 
         const items = JSON.parse('<%= locals.items %>'.replaceAll("&#34;", '"')).items;
@@ -206,147 +204,8 @@
         //     const friendlySrc = image.src.replaceAll("/", "&");
         //     a.href = "/items/" + link;
         // }
-
-        function openCart() {
-            loadCartItems();
-            cartItemstwo.style.visibility = "visible";
-        }
-
-        cartItems.style.visibility = "hidden";
-        let cartItemsHidden = true;
-
-        cartButton.onclick = function () {
-            if (cartItemsHidden) {
-                loadCartItems();
-                cartItems.style.visibility = "visible";
-            } else cartItems.style.visibility = "hidden";
-            cartItemsHidden = !cartItemsHidden;
-        }
-
-        function loadCartItems() {
-
-            if (authenticated == false) {
-                //alert("Log in to add items to your cart");
-                //return;
-            }
-            cartItems.innerHTML = ""; //clear the cart DOM
-
-            fetch("<%= locals.URL %>get-cart", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ cookie: getCookie("remember") })
-            }).then(res => {
-                if (res.ok) return res.json();
-            })
-                .then((data) => {
-                    data.cart.forEach((item, i) => {
-                        const cartItemContainer = document.createElement("div");
-                        cartItemContainer.classList.add("cart-item");
-
-                        const cartItemDetails = document.createElement("div");
-                        cartItemDetails.classList.add("cart-item-details");
-
-                        const cartItemImage = document.createElement("img");
-                        cartItemImage.classList.add("cart-item-image");
-                        cartItemImage.src = "<%= locals.URL %>imgs/products/" + data.keys[i] + ".jpg";
-
-                        const cartItemDescription = document.createElement("div");
-                        cartItemDescription.classList.add("cart-item-description");
-                        cartItemDescription.innerText = item;
-
-                        const cartItemCostContainer = document.createElement("div");
-                        cartItemCostContainer.classList.add("cart-item-cost-container");
-
-                        const cartItemCost = document.createElement("div");
-                        cartItemCost.classList.add("cart-item-cost");
-                        cartItemCost.innerText = "US $" + data.costs[i] + "ea";
-
-                        const cartItemAmount = document.createElement("p");
-                        cartItemAmount.innerText = "1x";
-                        cartItemAmount.classList.add("cart-item-quantity");
-
-                        const cartItemRemoveButton = document.createElement("img");
-                        cartItemRemoveButton.classList.add("cart-remove-button");
-                        cartItemRemoveButton.src = "<%= locals.URL %>imgs/close.png";
-
-                        cartItemRemoveButton.onclick = function () {
-                            fetch("<%= locals.URL %>remove-cart-item", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({ cookie: getCookie("remember"), item: this.parentElement.parentElement.getElementsByClassName("cart-item-description")[0].innerText })
-                            }).then(res => {
-                                if (res.ok) return res.json();
-                            }).then(data => {
-                                loadCartItems();
-                            })
-                        }
-
-                        let itemExists = false;
-
-                        for (let j = 0; j < cartItems.children.length; j++) {
-                            const child = cartItems.children[j];
-                            const d = child.querySelector(".cart-item-description");
-
-                            if (d.innerText == item) {
-                                itemExists = true;
-                                const quantity = child.querySelector(".cart-item-quantity");
-                                quantity.innerText = (Number(quantity.innerText.replaceAll("x", "")) + 1) + "x";
-                                const c = child.querySelector(".cart-item-cost");
-                                let total = Number(quantity.innerText.replaceAll("x", "")) * Number(data.costs[i]);
-                                c.innerText = "US $" + data.costs[i] + "ea" + " Total $" + total;
-                            }
-                        }
-
-                        if (!itemExists) {
-                            cartItems.appendChild(cartItemContainer);
-                            cartItemContainer.appendChild(cartItemDetails);
-                            cartItemDetails.appendChild(cartItemImage);
-                            cartItemDetails.appendChild(cartItemDescription);
-                            cartItemContainer.appendChild(cartItemCostContainer);
-                            cartItemCostContainer.appendChild(cartItemAmount);
-                            cartItemCostContainer.appendChild(cartItemCost);
-                            cartItemCostContainer.appendChild(cartItemRemoveButton);
-                        }
-                    })
-
-                    if (data.cart.length == 0) {
-                        const emptyCart = document.createElement("div");
-                        emptyCart.innerText = "Your cart is empty! Time to start shopping!";
-                        emptyCart.classList.add("empty");
-                        cartItems.appendChild(emptyCart);
-                    } else {
-                        const checkoutButton = document.createElement("button");
-                        checkoutButton.innerText = "Checkout";
-                        checkoutButton.classList.add("cart-checkout-button");
-                        cartItems.appendChild(checkoutButton);
-
-                        checkoutButton.onclick = function () {
-                            fetch("/get-checkout-url", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({ cookie: getCookie("remember") })
-                            }).then((text) => {
-                                if (text.ok) {
-                                    return text.json();
-                                }
-                            }).then((url) => {
-                                window.location.href = url.url;
-                            })
-                        }
-                    }
-                })
-        }
-
-        window.onfocus = function () {
-            loadCartItems();
-        }
     </script>
+    <script src="<%= locals.URL %>js/cart.js"></script>
     <script src="<%= locals.URL %>js/search.js"></script>
 </body>
 
