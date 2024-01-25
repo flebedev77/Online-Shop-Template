@@ -122,7 +122,7 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(items)
+                    body: JSON.stringify(data)
                 }).then(text => { return text.json(); })
                     .then(({ url }) => {
                         window.location = url;
@@ -136,7 +136,7 @@
             if (fname.value.trim() == "" || Number(fname.value.trim()) == undefined) return false;
             if (lname.value.trim() == "" || Number(lname.value.trim()) == undefined) return false;
             if (sadress.value.trim() == "") return false;
-            if (sadress2.value.trim() == "") return false;
+            //if (sadress2.value.trim() == "") return false;
             if (suburb.value.trim() == "") return false;
             if (state.value.trim() == "") return false;
             if (pcode.value.trim() == "" && Number(pcode.value.trim()) != undefined) return false;

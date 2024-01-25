@@ -26,7 +26,7 @@ const URL = `http://127.0.0.1:${port}/`; //my local development ip
 const author = "© flebedev77";
 
 const Datastore = require("nedb")
-const products = new Datastore({ filename: 'data/products.json', autoload: true });
+const orderedProducts = new Datastore({ filename: 'data/ordered_products.json', autoload: true });
 const accounts = new Datastore({ filename: "data/accounts.json", autoload: true });
 const admin = new Datastore({ filename: "data/admin.json", autoload: true });
 
@@ -549,14 +549,36 @@ app.post("/change-password", (req, res) => {
         //if the password is wrong send the old cookie and tell the user that the password was wrong
         res.json({ message: "Old password wrong", cookie: req.body.cookie });
     }
+});
+
+//logging in from the admin login form
+app.post("/admin-login", (req, res) => {
+    admin.find({ username: req.body.username, password: req.body.password }, function(err, docs) {
+        if (docs.length == 0) {
+            res.json({ message: "Account dosent exist" });
+        } else {
+            res.json({ message: "Success" });
+        }
+    })
 })
 
+let checkoutVerification = [];
+
 app.post("/create-checkout", async (req, res) => {
+    //orderedProducts.insert(req.body);
+
+    //generate a random token 20 characters long
+    const token = generateToken(20);
+
+    checkoutVerification.push({
+        token,
+        data: req.body
+    });
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-        line_items: req.body.map(item => {
+        line_items: req.body.items.map(item => {
             const storeItem = storeItems.get(item.id)
             return {
                 price_data: {
@@ -569,11 +591,38 @@ app.post("/create-checkout", async (req, res) => {
                 quantity: item.quantity,
             }
         }),
-        success_url: `${URL}success.html`,
+        success_url: `${URL}verification/${token}`,
         cancel_url: `${URL}`,
     })
     res.json({ url: session.url })
-})
+});
+
+app.get("/verification/:token", (req, res) => {
+    const token = req.params.token;
+    let exists = false
+
+    checkoutVerification.forEach((ver, i) => {
+        if (ver.token == token) {
+            exists = true;
+
+            orderedProducts.insert(ver.data);
+            res.redirect(URL + "success.html");
+        }
+    });
+
+    if (exists == false) {
+        res.sendFile(__dirname + "/client/expired.html");
+    }
+});
+
+function generateToken(len) {
+    const chars = "1234567890-=qwertyuiop[]asdfghjklzxcvcbvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+    let t = "";
+    for(let i = 0; i < len; i++) {
+        t += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return t;
+}
 
 app.use((req, res, next) => {
     res.status(404).render(__dirname + "/client/404.ejs", {
