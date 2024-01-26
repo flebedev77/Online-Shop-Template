@@ -75,7 +75,7 @@ app.get("/account", (req, res) => {
 
 //signup form
 app.post("/signup", async (req, res) => {
-    console.log("Account created: " + JSON.stringify(req.body));
+    log("Account created: " + JSON.stringify(req.body));
 
     let accountValid = true;
 
@@ -111,7 +111,7 @@ app.post("/signup", async (req, res) => {
 
 //login form
 app.post("/login", (req, res) => {
-    console.log("Account login " + JSON.stringify(req.body));
+    log("Account login " + JSON.stringify(req.body));
 
     let accountExists = false;
 
@@ -159,6 +159,10 @@ app.post("/authenticate", (req, res) => {
 
 //Shopping cart stuff
 app.post("/add-cart", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
     //decode base64 authentication cookie
     const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
 
@@ -173,7 +177,7 @@ app.post("/add-cart", (req, res) => {
                 combinedCart.push(req.body.cart);
             }
             accounts.update({ username, password }, { username, password, cart: combinedCart }, {}, function (err, num) {
-                console.log("Added " + JSON.stringify(req.body.cart) + " to " + username);
+                log("Added " + JSON.stringify(req.body.cart) + " to " + username);
                 res.json({ message: "sucess" })
             })
         }
@@ -181,6 +185,10 @@ app.post("/add-cart", (req, res) => {
 })
 
 app.post("/get-cart", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
     //decode base64 authentication cookie
     const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
 
@@ -210,6 +218,10 @@ app.post("/get-cart", (req, res) => {
 })
 
 app.post("/remove-cart-item", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
     //decode base64 authentication cookie
     const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
 
@@ -238,7 +250,7 @@ app.post("/remove-cart-item", (req, res) => {
 
         //update the database and respond
         accounts.update({ username, password }, { username, password, cart: combinedCart }, {}, function (err, num) {
-            console.log("Removed " + JSON.stringify(id) + " to " + username);
+            log("Removed " + JSON.stringify(id) + " to " + username);
             res.json({ message: "Sucessfully removed the item " });
         })
     })
@@ -451,6 +463,10 @@ app.post("/checkout-cart", async (req, res) => {
 
 //gets items from specified account and generetes a checkout link
 app.post("/get-checkout-url", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
     //decode base64 authentication cookie
     const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
 
@@ -500,6 +516,10 @@ app.post("/get-checkout-url", (req, res) => {
 })
 
 app.post("/get-username", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
     //decode the cookie
     const cookie = Buffer.from(req.body.cookie, 'base64').toString('ascii');
 
@@ -511,7 +531,7 @@ app.post("/get-username", (req, res) => {
     accounts.findOne({ username: username }, function (err, doc) {
         //error handling
         if (err) {
-            console.error(err);
+            log(err);
             return;
         }
 
@@ -520,6 +540,10 @@ app.post("/get-username", (req, res) => {
 });
 
 app.post("/change-username", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
     //decode the cookie
     const user = decodeCredentialCookie(req.body.cookie); //returns an object with username and password
 
@@ -529,7 +553,7 @@ app.post("/change-username", (req, res) => {
     //check is the new username is valid
     if (req.body.username.trim() != "" && req.body.username.length <= 100) {
         accounts.update({ username, password }, { username: req.body.username, password }, {}, function (err, num) {
-            console.log("Changed username from " + username + " to " + req.body.username);
+            log("Changed username from " + username + " to " + req.body.username);
 
             //generate new cookie
             let cookie = encodeCookie(req.body.username, password);
@@ -540,14 +564,20 @@ app.post("/change-username", (req, res) => {
 });
 
 app.post("/change-password", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
     const user = decodeCredentialCookie(req.body.cookie);
 
     //check if the old password is right
     if (user.password == req.body.oldPassword) {
         accounts.update({ username: user.username, password: user.password }, { username: user.username, password: req.body.newPassword }, {}, function (err, num) {
-            res.json({ message: "Sucessfully changed your password", cookie: encodeCookie(user.username, req.body.newPassword) })
+            log("Changed " + user.username +  "'s password from " + user.password + " to " + req.body.newPassword);
+            res.json({ message: "Sucessfully changed your password", cookie: encodeCookie(user.username, req.body.newPassword) });
         });
     } else {
+        log("Failed to change " + user.username +  "'s password from " + user.password + " to " + req.body.newPassword);
         //if the password is wrong send the old cookie and tell the user that the password was wrong
         res.json({ message: "Old password wrong", cookie: req.body.cookie });
     }
@@ -555,13 +585,35 @@ app.post("/change-password", (req, res) => {
 
 //logging in from the admin login form
 app.post("/admin-login", (req, res) => {
-    admin.find({ username: req.body.username, password: req.body.password }, function(err, docs) {
+    admin.find({ username: req.body.username, password: req.body.password }, function (err, docs) {
         if (docs.length == 0) {
             res.json({ message: "Account dosent exist", ok: false, data: null });
         } else {
+            log("Admin logged in");
             res.json({ message: "Success", data: orderedProducts.getAllData(), ok: true });
         }
     })
+})
+
+//deleting account
+app.post("/delete-account", (req, res) => {
+    if (!req.body.cookie || !req.body.password) {
+        res.sendStatus(101);
+        return;
+    }
+    const user = decodeCredentialCookie(req.body.cookie);
+
+    if (req.body.password == user.password) {
+
+        accounts.remove({ username: user.username, password: user.password }, {}, (err, n) => {
+            if (err) {
+                log(err);
+            } else {
+                log("Deleted account " + user.username);
+                res.json({ message: "Sucessfully deleted your account", ok: true });
+            }
+        })
+    }
 })
 
 let checkoutVerification = [];
@@ -623,15 +675,6 @@ app.get("/verification/:token", (req, res) => {
     }
 });
 
-function generateToken(len) {
-    const chars = "qwertyuiopasdfghjklzxcvcbvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-    let t = "";
-    for(let i = 0; i < len; i++) {
-        t += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return t;
-}
-
 app.use((req, res, next) => {
     res.status(404).render(__dirname + "/client/404.ejs", {
         URL,
@@ -639,7 +682,7 @@ app.use((req, res, next) => {
     });
 })
 
-app.listen(port, console.log(`Server listening on port ${port}`));
+app.listen(port, log(`Server listening on port ${port}`));
 
 app.use((err, req, res, next) => {
     res.status(500).render(__dirname + "/client/404.ejs", {
@@ -647,6 +690,15 @@ app.use((err, req, res, next) => {
         author
     });
 })
+
+function generateToken(len) {
+    const chars = "qwertyuiopasdfghjklzxcvcbvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+    let t = "";
+    for (let i = 0; i < len; i++) {
+        t += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return t;
+}
 
 function decodeCredentialCookie(cookie) {
     //decode the cookie
@@ -663,4 +715,10 @@ function encodeCookie(username, password) {
     let cookie = username + ":" + password;
     //encode cookie
     return Buffer.from(cookie).toString('base64');
+}
+
+function log(message) {
+    const date = new Date();
+    const time = `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] `;
+    console.log(time + message)
 }

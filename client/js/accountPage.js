@@ -159,7 +159,7 @@ function loadCartItems() {
 const newUsernameInput = document.getElementById("change-username-input");
 const usernameButton = document.getElementById("username-button");
 
-usernameButton.onclick = function() {
+usernameButton.onclick = function () {
     //check if inputted username is valid the server also checks this
     if (newUsernameInput.value.length <= 100 && newUsernameInput.value.trim() != "") {
         //ask the server to change the username
@@ -189,7 +189,7 @@ const newPasswordInput = document.getElementById("new-password-input");
 const confirmPasswordInput = document.getElementById("cnfrm-password-input");
 const setPasswordButton = document.getElementById("set-password-button");
 
-setPasswordButton.onclick = function() {
+setPasswordButton.onclick = function () {
     if (newPasswordInput.value == confirmPasswordInput.value) {
         fetch("/change-password", {
             method: "POST",
@@ -208,5 +208,29 @@ setPasswordButton.onclick = function() {
         });
     } else {
         alert("The confirm password and new passwords dont match");
+    }
+}
+
+//deleting account (scary)
+document.getElementById("delBtn").onclick = function () {
+    let pass = prompt("Confirm it is you by entering you password");
+
+    if (pass != "") {
+        fetch("/delete-account", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ cookie: getCookie("remember"), password: pass })
+        }).then(res => {
+            if (res.ok) return res.json();
+        }).then(data => {
+            if (data.ok) {
+                alert(data.message);
+
+                //delete the obsolete account cookie and refresh
+                document.cookie.split(";").forEach(function (c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); window.location.reload();
+            }
+        })
     }
 }

@@ -124,3 +124,7 @@ main>section {
 #back-button:hover {
     background: rgba(47, 40, 171, 0.95);
 }
+
+main {
+    display: none;
+}

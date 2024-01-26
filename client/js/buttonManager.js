@@ -39,7 +39,7 @@ async function authenticate(hash) {
             console.log(data.message);
             
             if (data.ok) resolve(true)
-            else reject(false)
+            else resolve(false)
         });
     })
 }

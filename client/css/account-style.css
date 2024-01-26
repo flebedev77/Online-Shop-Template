@@ -110,3 +110,13 @@ hr {
 .content #cart-items-settings .cart-item {
     background: white;
 }
+
+#delBtn {
+    background: rgba(164, 12, 12, 0.8);
+    border: 1px solid rgb(79, 10, 10, 0.8);
+}
+
+#delBtn:hover {
+    background: rgba(164, 12, 12, 0.9);
+    border: 1px solid rgb(79, 10, 10, 0.9);
+}
