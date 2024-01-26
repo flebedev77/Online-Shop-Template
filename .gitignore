@@ -3,4 +3,4 @@ data/accounts.json
 .gitingore
 data/admin.json
 data/ordered_products.json
-node_modules
+node_modules/*
