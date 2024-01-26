@@ -74,6 +74,7 @@ function loadOrders(data, storeItems) {
             dismiss.innerText = "Dismiss";
             dismiss.id = "dismiss";
             dismiss.entryId = entryId;
+            dismiss.itemId = item.id;
 
             dismiss.onclick = function() {
                 fetch("/remove-order", {
@@ -81,7 +82,7 @@ function loadOrders(data, storeItems) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ id: this.entryId, cookie: getCookie("admin") })
+                    body: JSON.stringify({ id: this.entryId, cookie: getCookie("admin"), productId: dismiss.itemId })
                 }).then((res) => {
                     if (res.ok) return res.json();
                 }).then((data) => {

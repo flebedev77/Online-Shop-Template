@@ -610,6 +610,11 @@ app.post("/remove-order", (req, res) => {
         return;
     }
 
+    if (!req.body.productId || !req.body.id) {
+        res.sendStatus(101);
+        return;
+    }
+
     const user = decodeCredentialCookie(req.body.cookie);
 
     admin.find({ username: user.username, password: user.password }, function(err, docs) {
@@ -622,15 +627,33 @@ app.post("/remove-order", (req, res) => {
         if (docs.length == 0) {
             res.json({ ok: false });
         } else {
-            orderedProducts.remove({ _id: req.body.id }, {}, function(err, n) {
+            orderedProducts.find({ _id: req.body.id }, function(err, docs) {
                 if (err) {
                     log(err);
                     res.json({ ok: false });
                     return;
                 }
+                if (docs.length == 0) {
+                    res.json({ ok: false });
+                } else {
+                    docs.forEach((doc) => {
+                        let items = doc.items;
+                        items.forEach((val, i) => {
+                            if (val.id == req.body.productId) {
+                                items.splice(i, 1);
+                            }
+                        });
 
-                log("Order removed " + req.body.id);
-                res.json({ ok: true });
+                        orderedProducts.update({ _id: req.body.id }, { items: items }, {}, (err, num) => {
+                            if (err) {
+                                log(err);
+                                res.json({ ok: false });
+                                return;
+                            }
+                            res.json({ ok: true });
+                        })
+                    })
+                }
             })
         }
     })
