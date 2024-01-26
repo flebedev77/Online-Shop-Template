@@ -1,6 +1,5 @@
-.env
-data/accounts.json
-.gitingore
-data/admin.json
-data/ordered_products.json
-node_modules/*
+/.env
+/data/accounts.json
+/data/admin.json
+/data/ordered_products.json
+/node_modules
