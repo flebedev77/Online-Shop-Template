@@ -1,3 +1,5 @@
 .env
 data/accounts.json
 .gitingore
+data/admin.json
+data/ordered_products.json

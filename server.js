@@ -590,7 +590,48 @@ app.post("/admin-login", (req, res) => {
             res.json({ message: "Account dosent exist", ok: false, data: null });
         } else {
             log("Admin logged in");
-            res.json({ message: "Success", data: orderedProducts.getAllData(), ok: true });
+
+            let names = []
+            storeItems.forEach((val, i) => {
+                names.push( { name: val.name, id: i, priceInCents: val.priceInCents } );
+            })
+
+            const cookie = encodeCookie(req.body.username, req.body.password);
+
+            res.json({ message: "Success", data: orderedProducts.getAllData(), ok: true, storeItems: names, cookie });
+        }
+    })
+})
+
+//removes orders from order database
+app.post("/remove-order", (req, res) => {
+    if (!req.body.cookie) {
+        res.sendStatus(101);
+        return;
+    }
+
+    const user = decodeCredentialCookie(req.body.cookie);
+
+    admin.find({ username: user.username, password: user.password }, function(err, docs) {
+        if (err) {
+            log(err);
+            res.json({ ok: false });
+            return;
+        }
+
+        if (docs.length == 0) {
+            res.json({ ok: false });
+        } else {
+            orderedProducts.remove({ _id: req.body.id }, {}, function(err, n) {
+                if (err) {
+                    log(err);
+                    res.json({ ok: false });
+                    return;
+                }
+
+                log("Order removed " + req.body.id);
+                res.json({ ok: true });
+            })
         }
     })
 })

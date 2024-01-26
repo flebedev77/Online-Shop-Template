@@ -1,3 +1,17 @@
+:root {
+    /* green button */
+    --green-button-background: rgba(31, 114, 31, 0.9);
+    --green-button-border: rgba(20, 70, 20, 0.9);
+    --green-button-background-hover: rgba(31, 114, 31, 0.85);
+    --green-button-border-hover: rgba(20, 70, 20, 0.85);
+
+    /* red button */
+    --red-button-background: rgba(167, 27, 27, 0.9);
+    --red-button-border: rgba(125, 25, 25, 0.9);
+    --red-button-background-hover: rgba(149, 30, 30, 0.85);
+    --red-button-border-hover: rgba(102, 21, 21, 0.85);
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -46,6 +60,7 @@ main>section {
 
 .header-info>h2 {
     margin: 0;
+    margin-left: 20px;
     font-weight: lighter;
 }
 
@@ -125,6 +140,97 @@ main>section {
     background: rgba(47, 40, 171, 0.95);
 }
 
-main {
-    display: none;
+/* main {
+} */
+
+.orders {
+    flex-basis: 100%;
+    width: max-content;
+}
+
+.order {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.order-container {
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#overview {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#overview > hr {
+    width: 100%;
+    height: 1px;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#overview > section {
+    margin-top: 100px;
+}
+
+#overview button {
+    padding: 5px 10px;
+    background: var(--green-button-background);
+    border: 1px solid var(--green-button-border);
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#overview button:hover {
+    background: var(--green-button-background-hover);
+    border-color: var(--green-button-border-hover);
+}
+
+#overview #dismiss {
+    background: var(--red-button-background);
+    border-color: var(--red-button-border);
+}
+
+#overview #dismiss:hover {
+    background: var(--red-button-background-hover);
+    border-color: var(--red-button-border-hover);
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px;
+    margin-left: auto;
+}
+
+.order img {
+    margin: 10px;
+}
+
+.order-info h3 {
+    font-weight: normal;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.9);
+    margin: 0;
+}
+
+.order-info p {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 0;
+}
+
+.prices-container {
+    display: flex;
+    gap: 5px;
+}
+
+.title-container {
+    margin-left: 20px;
 }
