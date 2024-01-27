@@ -100,7 +100,7 @@ function loadOrders(data, storeItems) {
             storeItems.forEach((it) => {
                 if (it.id == item.id) {
                     title.innerText = it.name;
-                    eachCost.innerText = "AU $" + (it.priceInCents / 100);
+                    eachCost.innerText = "AU $" + (it.priceInCents / 100) + "ea";
                     totalCost.innerText = " Total price AU $" + ((it.priceInCents / 100) * item.quantity);
                 }
             })
@@ -114,6 +114,7 @@ function loadOrders(data, storeItems) {
             view.itemAmount = item.quantity;
             view.eachCost = eachCost.innerText;
             view.totalCost = totalCost.innerText;
+            view.formDetails = formDetails;
 
             view.onclick = function () {
                 //hide all the screens except for the order view one
@@ -160,6 +161,12 @@ function loadOrders(data, storeItems) {
 
                 //continue filling out shipping information
                 const shippingContainer = document.querySelector(".shipping-information-content");
+
+                Object.keys(this.formDetails).forEach((key) => {
+                    const p = document.createElement("p");
+                    p.innerText = key + ": " + this.formDetails[key];
+                    shippingContainer.appendChild(p);
+                })
             }
 
             const hr = document.createElement("hr");
