@@ -7,7 +7,7 @@ const overview = document.getElementById("overview");
 const orderView = document.getElementById("order-view");
 
 overview.style.display = "none";
-//orderView.style.display = "none";
+orderView.style.display = "none";
 main.style.display = "";
 
 loginButton.onclick = function () {
@@ -97,9 +97,12 @@ function loadOrders(data, storeItems) {
             const view = document.createElement("button");
             view.innerText = "View";
             view.id = "view";
+            view.itemId = item.id;
+            view.enryId = entryId;
 
             view.onclick = function() {
-
+                overview.style.display = "none";
+                orderView.style.display = "";
             }
 
             const hr = document.createElement("hr");
