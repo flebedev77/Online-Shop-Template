@@ -33,6 +33,28 @@ loginButton.onclick = function () {
     })
 }
 
+//refreshing orders
+document.querySelector(".refesh-list").onclick = function() {
+    fetch("/admin-login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username: usernameInput.value, password: passwordInput.value })
+    }).then(res => {
+        if (res.ok) return res.json()
+    }).then((data) => {
+        if (data.ok) {
+            overview.style.display = "";
+            main.style.display = "none";
+
+            setCookie("admin", data.cookie, 1);
+
+            loadOrders(data.data, data.storeItems);
+        }
+    })
+}
+
 function loadOrders(data, storeItems) {
     const orderContainer = document.querySelector(".order-container");
 
@@ -161,6 +183,7 @@ function loadOrders(data, storeItems) {
 
                 //continue filling out shipping information
                 const shippingContainer = document.querySelector(".shipping-information-content");
+                shippingContainer.innerHTML = "";
 
                 Object.keys(this.formDetails).forEach((key) => {
                     const p = document.createElement("p");
@@ -181,8 +204,8 @@ function loadOrders(data, storeItems) {
             priceContainer.appendChild(eachCost);
             priceContainer.appendChild(totalCost);
             orderItem.appendChild(buttonContainer);
-            buttonContainer.appendChild(dismiss);
             buttonContainer.appendChild(view);
+            buttonContainer.appendChild(dismiss);
 
             orderContainer.appendChild(orderItem);
         })

@@ -233,6 +233,20 @@ button:hover {
 
 .title-container {
     margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.refesh-list {
+    margin: 10px;
+    margin-left: auto;
+    width: 30px;
+    height: 30px;
+    transition-duration: 0.5s;
+    transition-property: transform;
+}
+.refesh-list:hover {
+    transform: rotate(15deg);
 }
 
 /* #overview, main {

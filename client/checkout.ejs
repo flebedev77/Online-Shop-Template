@@ -140,8 +140,8 @@
             if (suburb.value.trim() == "") return false;
             if (state.value.trim() == "") return false;
             if (pcode.value.trim() == "" && Number(pcode.value.trim()) != undefined) return false;
-            if (email.value.trim() == "" && email.value.trim().includes("@")) return false;
-            if (cemail.value.trim() == "" && cemail.value.trim() == email.value.trim()) return false;
+            if (email.value.trim() == "" || !email.value.trim().includes("@")) return false;
+            if (cemail.value.trim() == "" || cemail.value.trim() != email.value.trim()) return false;
             if (phone.value.trim() == "") return false;
             return true;
         }
