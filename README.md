@@ -24,3 +24,4 @@ Navigate to localhost:3000 in your web browser and then you should be redirected
 Things you should change:
     change the logo (logo can be found in "client/imgs/logo.png")
     change the name
+    in data/admin.json change the password and username (You will get hacked if you dont do this)
