@@ -209,7 +209,17 @@ function loadOrders(data, storeItems) {
 
             orderContainer.appendChild(orderItem);
         })
-    })
+    });
+
+    if (data.length == 0) {
+        orderContainer.innerHTML = "";
+        const msg = document.createElement("h2");
+
+        msg.innerText = "No orders...";
+        msg.style.textAlign = "center";
+
+        orderContainer.appendChild(msg);
+    }
 }
 
 //back to overview button working
