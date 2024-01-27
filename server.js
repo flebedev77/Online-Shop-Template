@@ -573,11 +573,11 @@ app.post("/change-password", (req, res) => {
     //check if the old password is right
     if (user.password == req.body.oldPassword) {
         accounts.update({ username: user.username, password: user.password }, { username: user.username, password: req.body.newPassword }, {}, function (err, num) {
-            log("Changed " + user.username +  "'s password from " + user.password + " to " + req.body.newPassword);
+            log("Changed " + user.username + "'s password from " + user.password + " to " + req.body.newPassword);
             res.json({ message: "Sucessfully changed your password", cookie: encodeCookie(user.username, req.body.newPassword) });
         });
     } else {
-        log("Failed to change " + user.username +  "'s password from " + user.password + " to " + req.body.newPassword);
+        log("Failed to change " + user.username + "'s password from " + user.password + " to " + req.body.newPassword);
         //if the password is wrong send the old cookie and tell the user that the password was wrong
         res.json({ message: "Old password wrong", cookie: req.body.cookie });
     }
@@ -593,7 +593,7 @@ app.post("/admin-login", (req, res) => {
 
             let names = []
             storeItems.forEach((val, i) => {
-                names.push( { name: val.name, id: i, priceInCents: val.priceInCents } );
+                names.push({ name: val.name, id: i, priceInCents: val.priceInCents });
             })
 
             const cookie = encodeCookie(req.body.username, req.body.password);
@@ -617,7 +617,7 @@ app.post("/remove-order", (req, res) => {
 
     const user = decodeCredentialCookie(req.body.cookie);
 
-    admin.find({ username: user.username, password: user.password }, function(err, docs) {
+    admin.find({ username: user.username, password: user.password }, function (err, docs) {
         //error checking
         if (err) {
             log(err);
@@ -630,7 +630,7 @@ app.post("/remove-order", (req, res) => {
             res.json({ ok: false });
         } else {
             //find that item that the person wants to delete
-            orderedProducts.find({ _id: req.body.id }, function(err, docs) {
+            orderedProducts.find({ _id: req.body.id }, function (err, docs) {
                 //more error checking
                 if (err) {
                     log(err);
@@ -650,17 +650,30 @@ app.post("/remove-order", (req, res) => {
                             }
                         });
 
-                        //update the database
-                        orderedProducts.update({ _id: req.body.id }, { items: items, _id: req.body.id, formDetails: doc.formDetails }, {}, (err, num) => {
-                            //even more error checking
-                            if (err) {
-                                log(err);
-                                res.json({ ok: false });
-                                return;
-                            }
-                            //respond to the user that the operation succeeded
-                            res.json({ ok: true });
-                        })
+                        //if entry dosent have any more items then delete the entry
+                        if (items.length == 0) {
+                            orderedProducts.remove({ _id: req.body.id }, function(err, n) {
+                                //and error checking
+                                if (err) {
+                                    log(err);
+                                    res.json({ ok: false });
+                                    return;
+                                }
+                                res.json({ ok: true });
+                            })
+                        } else {
+                            //update the database
+                            orderedProducts.update({ _id: req.body.id }, { items: items, _id: req.body.id, formDetails: doc.formDetails }, {}, (err, num) => {
+                                //even more error checking
+                                if (err) {
+                                    log(err);
+                                    res.json({ ok: false });
+                                    return;
+                                }
+                                //respond to the user that the operation succeeded
+                                res.json({ ok: true });
+                            });
+                        }
                     })
                 }
             })
