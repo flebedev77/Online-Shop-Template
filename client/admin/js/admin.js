@@ -4,8 +4,10 @@ const usernameInput = document.getElementById("username");
 
 const main = document.querySelector("main");
 const overview = document.getElementById("overview");
+const orderView = document.getElementById("order-view");
 
 overview.style.display = "none";
+//orderView.style.display = "none";
 main.style.display = "";
 
 loginButton.onclick = function () {
@@ -96,6 +98,10 @@ function loadOrders(data, storeItems) {
             view.innerText = "View";
             view.id = "view";
 
+            view.onclick = function() {
+
+            }
+
             const hr = document.createElement("hr");
 
             storeItems.forEach((it) => {
@@ -122,4 +128,11 @@ function loadOrders(data, storeItems) {
             orderContainer.appendChild(orderItem);
         })
     })
+}
+
+//back to overview button working
+document.getElementById("back-overview").onclick = function() {
+    overview.style.display = "";
+    main.style.display = "none";
+    orderView.style.display = "none";
 }

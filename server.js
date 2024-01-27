@@ -618,38 +618,47 @@ app.post("/remove-order", (req, res) => {
     const user = decodeCredentialCookie(req.body.cookie);
 
     admin.find({ username: user.username, password: user.password }, function(err, docs) {
+        //error checking
         if (err) {
             log(err);
             res.json({ ok: false });
             return;
         }
 
+        //if there is an account
         if (docs.length == 0) {
             res.json({ ok: false });
         } else {
+            //find that item that the person wants to delete
             orderedProducts.find({ _id: req.body.id }, function(err, docs) {
+                //more error checking
                 if (err) {
                     log(err);
                     res.json({ ok: false });
                     return;
                 }
+                //checking if the item exists
                 if (docs.length == 0) {
                     res.json({ ok: false });
                 } else {
                     docs.forEach((doc) => {
                         let items = doc.items;
+                        //get the items and exclude the item that needs to be removed
                         items.forEach((val, i) => {
                             if (val.id == req.body.productId) {
                                 items.splice(i, 1);
                             }
                         });
 
-                        orderedProducts.update({ _id: req.body.id }, { items: items }, {}, (err, num) => {
+                        //update the database
+                        orderedProducts.update({ _id: req.body.id }, { items: items, _id: req.body.id, formDetails: doc.formDetails }, {}, (err, num) => {
+                            //even more error checking
                             if (err) {
                                 log(err);
                                 res.json({ ok: false });
                                 return;
                             }
+                            //respond to the user that the operation succeeded
                             res.json({ ok: true });
                         })
                     })

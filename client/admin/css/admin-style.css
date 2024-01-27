@@ -176,7 +176,7 @@ main>section {
     margin-top: 100px;
 }
 
-#overview button {
+button {
     padding: 5px 10px;
     background: var(--green-button-background);
     border: 1px solid var(--green-button-border);
@@ -185,17 +185,17 @@ main>section {
     border-radius: 5px;
 }
 
-#overview button:hover {
+button:hover {
     background: var(--green-button-background-hover);
     border-color: var(--green-button-border-hover);
 }
 
-#overview #dismiss {
+#dismiss {
     background: var(--red-button-background);
     border-color: var(--red-button-border);
 }
 
-#overview #dismiss:hover {
+#dismiss:hover {
     background: var(--red-button-background-hover);
     border-color: var(--red-button-border-hover);
 }
@@ -233,4 +233,35 @@ main>section {
 
 .title-container {
     margin-left: 20px;
+}
+
+#overview, main {
+    display: none;
+}
+
+.order-view-container {
+    border-left: 1px rgba(0, 0, 0, 0.7) solid;
+    margin-left: 100px;
+    padding-inline: 10px;
+}
+
+.header-containter {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+}
+
+.header-info-container > * {
+    margin: 0;
+}
+
+.shipping-information-header {
+    display: flex;
+}
+
+.shipping-information-header > h2 {
+    width: max-content;
+    border-bottom: 2px rgba(30, 143, 30, 0.9) solid;
+    padding-bottom: 5px;
 }
