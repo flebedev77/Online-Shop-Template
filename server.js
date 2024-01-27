@@ -636,7 +636,7 @@ app.post("/admin-login", (req, res) => {
 
             const cookie = encodeCookie(req.body.username, req.body.password);
 
-            res.json({ message: "Success", data: orderedProducts.getAllData(), ok: true, storeItems: names, cookie });
+            res.json({ message: "Successfully logged into your administrator account", data: orderedProducts.getAllData(), ok: true, storeItems: names, cookie });
         }
     })
 })
