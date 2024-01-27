@@ -75,18 +75,18 @@
     <div id="order-view">
         <div class="order-view-container">
             <span class="header-containter">
-                <img src="../imgs/products/8.jpg" alt="Image of product" height="150px" />
+                <img src="../imgs/products/8.jpg" alt="Image of product" height="150px" id="order-view-image" />
                 <div class="header-info-container">
-                    <h3>Name of product</h3>
-                    <div style="display: flex;">
-                        <p class="order-amount">x10</p>
-                        <p class="order-amount">&nbsp; USD $100 ea</p>
-                        <p class="order-amount">&nbsp; USD $1000 total</p>
+                    <h3 id="product-name-order">Name of product</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <p class="order-amount" id="order-amount-view">x10</p>
+                        <p class="order-amount" id="order-each-cost">&nbsp; USD $100 ea</p>
+                        <p class="order-amount" id="order-total-cost">&nbsp; USD $1000 total</p>
                     </div>
                 </div>
                 <div class="button-container">
                     <button id="back-overview">Back to overview</button>
-                    <button id="dismiss">Dismiss</button>
+                    <button id="dismiss" class="over-dismiss">Dismiss</button>
                 </div>
             </span>
             <span class="shipping-information">

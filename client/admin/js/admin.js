@@ -34,14 +34,17 @@ loginButton.onclick = function () {
 }
 
 function loadOrders(data, storeItems) {
-    console.log(storeItems);
     const orderContainer = document.querySelector(".order-container");
 
-    //looping over all the items the person ordered { formDetails: {...}, items: [ { id: 2, quantity: 3 } ] }
+    //clear the container before loading
+    orderContainer.innerHTML = "";
+
+    //looping over all the items the person ordered. data = [{ formDetails: {...}, items: [ { id: 2, quantity: 3 } ] }]
 
     data.forEach((d) => {
         //if of the order in the database
         const entryId = d._id;
+        const formDetails = d.formDetails;
 
         d.items.forEach((item) => {
             const orderItem = document.createElement("span");
@@ -78,7 +81,7 @@ function loadOrders(data, storeItems) {
             dismiss.entryId = entryId;
             dismiss.itemId = item.id;
 
-            dismiss.onclick = function() {
+            dismiss.onclick = function () {
                 fetch("/remove-order", {
                     method: "POST",
                     headers: {
@@ -94,26 +97,69 @@ function loadOrders(data, storeItems) {
                 })
             }
 
+            storeItems.forEach((it) => {
+                if (it.id == item.id) {
+                    title.innerText = it.name;
+                    eachCost.innerText = "AU $" + (it.priceInCents / 100);
+                    totalCost.innerText = " Total price AU $" + ((it.priceInCents / 100) * item.quantity);
+                }
+            })
+
             const view = document.createElement("button");
             view.innerText = "View";
             view.id = "view";
             view.itemId = item.id;
-            view.enryId = entryId;
+            view.entryId = entryId;
+            view.itemTitle = title.innerText;
+            view.itemAmount = item.quantity;
+            view.eachCost = eachCost.innerText;
+            view.totalCost = totalCost.innerText;
 
-            view.onclick = function() {
+            view.onclick = function () {
+                //hide all the screens except for the order view one
                 overview.style.display = "none";
+                main.style.display = "none";
                 orderView.style.display = "";
+
+                //getting the correct image
+                document.getElementById("order-view-image").src = "../imgs/products/" + this.itemId + ".jpg";
+                //getting the right title
+                document.getElementById("product-name-order").innerText = this.itemTitle;
+                //getting the right amount
+                document.getElementById("order-amount-view").innerText = "x" + this.itemAmount;
+                //getting the cost of each item
+                document.getElementById("order-each-cost").innerText = this.eachCost;
+                //getting the total cost of all the items
+                document.getElementById("order-total-cost").innerText = this.totalCost;
+
+                //making the dismiss button work for the correct product
+                const overviewDismiss = document.querySelector(".over-dismiss");
+                overviewDismiss.entryId = this.entryId;
+                overviewDismiss.itemId = this.itemId;
+
+                //keep the element the client is viewing in memory to then delete it if the client pressed the dismiss button
+                overviewDismiss.domItem = this.parentElement.parentElement;
+                overviewDismiss.onclick = function () {
+                    fetch("/remove-order", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ id: this.entryId, cookie: getCookie("admin"), productId: dismiss.itemId })
+                    }).then((res) => {
+                        if (res.ok) return res.json();
+                    }).then((data) => {
+                        if (data.ok) {
+                            this.domItem.remove();
+                            overview.style.display = "";
+                            main.style.display = "none";
+                            orderView.style.display = "none";
+                        }
+                    })
+                }
             }
 
             const hr = document.createElement("hr");
-
-            storeItems.forEach((it) => {
-                if (it.id == item.id) {
-                    title.innerText = it.name;
-                    eachCost.innerText = "AU $" + (it.priceInCents/100);
-                    totalCost.innerText = " Total price AU $" + ((it.priceInCents/100) * item.quantity);
-                }
-            })
 
             orderContainer.appendChild(hr);
 
@@ -134,7 +180,7 @@ function loadOrders(data, storeItems) {
 }
 
 //back to overview button working
-document.getElementById("back-overview").onclick = function() {
+document.getElementById("back-overview").onclick = function () {
     overview.style.display = "";
     main.style.display = "none";
     orderView.style.display = "none";
