@@ -1,0 +1,1 @@
+Optimise the cart code - turn the cart to store the item quantity and id instead of repeating the id of amount quantity

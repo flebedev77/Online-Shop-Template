@@ -256,6 +256,44 @@ app.post("/remove-cart-item", (req, res) => {
     })
 })
 
+//clearing the cart
+app.post("/clear-cart", (req, res) => {
+    //error checking
+    if (!req.body.cookie) {
+        log("Tried clearing their cart without specifing cookie");
+        res.sendStatus(403);
+        return;
+    }
+
+    const user = decodeCredentialCookie(req.body.cookie);
+
+    accounts.find({ username: user.username, password: user.password }, function(err, docs) {
+        if (err) {
+            log(err);
+            res.sendStatus(403);
+            return;
+        }
+
+        if (docs.length == 0) {
+            log("Could not find account");
+            res.sendStatus(404);
+            return;
+        } else {
+            docs.forEach((doc) => {
+                accounts.update({ username: user.username, password: user.password }, { username: user.username, password: user.password, cart: [], _id: doc._id }, {}, (err, num) => {
+                    if (err) {
+                        log(err);
+                        res.sendStatus(403);
+                        return;
+                    }
+                    log("Cleared " + user.username + "'s cart sucessfully");
+                    res.sendStatus(200);
+                })
+            })
+        }
+    })
+})
+
 //route for an item
 app.get("/items/:productName", (req, res) => {
     let result = req.params.productName.replaceAll("_", " ").replaceAll("&amp;", "&");

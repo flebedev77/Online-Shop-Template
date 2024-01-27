@@ -157,6 +157,9 @@ function loadOrders(data, storeItems) {
                         }
                     })
                 }
+
+                //continue filling out shipping information
+                const shippingContainer = document.querySelector(".shipping-information-content");
             }
 
             const hr = document.createElement("hr");

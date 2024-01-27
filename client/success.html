@@ -50,5 +50,22 @@
             <button class="back-to-home-screen-button" onclick="window.location.href='/'">Go to home screen</button>
         </div>
     </header>
+
+
+    <script src="js/authenticator.js"></script>
+    <script src="js/cookieRemember.js"></script>
+    <script>
+        authenticate(getCookie("remember")).then((valid) => {
+            if (valid) {
+                fetch("/clear-cart", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ cookie: getCookie("remember") })
+                })
+            }
+        })
+    </script>
 </body>
 </html>
