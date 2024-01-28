@@ -2,4 +2,5 @@
 /data/accounts.json
 /data/admin.json
 /data/ordered_products.json
-/node_modules
+/node_modules/*
+/data/comments/*

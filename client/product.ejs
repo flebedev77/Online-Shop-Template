@@ -70,6 +70,41 @@
         <div id="product-description"></div>
     </div>
 
+    <hr>
+
+    <div id="reviews">
+        <h2>Reviews (<%= locals.comments.length %>)</h2>
+        <div class="write-review-container" id="write-Review">
+            <h3>Write a review</h3>
+            <section class="title-section-review">
+                <label for="review-title-input">Review title</label>
+                <input type="text" name="review-title-input" id="review-title-input"
+                    placeholder="Should describe what this review is about..">
+            </section>
+            <section class="content-section-review">
+                <label for="review-content-input">Your review</label>
+                <textarea name="review-content-input" id="review-content-input"
+                    placeholder="Write everything else here"></textarea>
+            </section>
+            <section class="button-review-container">
+                <button id="publishReviewButton">Publish</button>
+                <button id="cancelReviewButton">Cancel</button>
+            </section>
+        </div>
+        <div id="reviewContainer">
+            <!-- Example review
+            <span class="review">
+                <div class="review-title-container">
+                    <h3>Title</h3>
+                    <p>Posted by username</p>
+                </div>
+                <p>Content</p>
+            </span> 
+            -->
+        </div>
+    </div>
+
+    <!-- Obsolete: old checkout overlay -->
     <div class="adress-overlay">
         <div class="dialog">
             <div class="adress-header">
@@ -94,6 +129,7 @@
 
     <!-- URL is passed by the server which is the base hostname url WITH the / at the end -->
     <script src="<%= locals.URL %>js/buttonManager.js"></script>
+    <script src="<%= locals.URL %>js/review.js"></script>
     <script>
         //cart script
         const cartButton = document.getElementById("cart-button");
@@ -296,6 +332,7 @@
                     window.location.href = url;
                 })
         }
+
     </script>
     <script src="<%= locals.URL %>js/search.js"></script>
 </body>

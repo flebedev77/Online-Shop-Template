@@ -132,6 +132,8 @@ input[type=number] {
     gap: 10px;
 }
 
+/* Cart style */
+
 .checkout-button-container > button {
     padding: 10px 20px;
     background: rgb(75, 89, 152);
@@ -148,14 +150,137 @@ input[type=number] {
     background: rgb(91, 106, 173);
 }
 
+/* description style */
+
 #product-description {
     margin: 10px;
+    font-size: 15px;
 }
 
 #description-title {
-    font-size: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 #description {
     margin: 50px 50px;
+}
+
+/* Review style */
+
+#reviews {
+    width: 360px;
+}
+
+#write-Review {
+    margin-left: 20px;
+    margin-bottom: 50px;
+}
+
+#write-Review > h3 {
+    margin-left: 0px;
+    font-size: 19px;
+}
+
+#write-Review input {
+    border: 1px rgba(0, 0, 0, 0.7) solid;
+    background: white;
+    border-radius: 5px;
+    width: 100%;
+    height: 30px;
+    font-size: 18px;
+    padding: 5px 10px;
+}
+
+#write-Review input:focus {
+    outline: 1px rgba(0, 0, 0, 0.8) solid;
+}
+
+#write-Review label {
+    font-size: 17px;
+}
+
+.title-section-review, .content-section-review {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#write-Review textarea {
+    border: 1px rgba(0, 0, 0, 0.7) solid;
+    background: white;
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 5px 10px;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    resize: none;
+}
+
+#write-Review textarea:focus {
+    outline: 1px rgba(0, 0, 0, 0.8) solid;
+}
+
+.content-section-review {
+    margin-top: 10px;
+}
+
+/* Styling review buttons */
+
+.button-review-container {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.button-review-container button {
+    background: rgba(44, 132, 31, 0.9);
+    border: 1px rgba(26, 74, 18, 0.9) solid;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+}
+
+.button-review-container button:hover {
+    background: rgba(44, 132, 31, 0.99);
+    border: 1px rgba(26, 74, 18, 0.99) solid;
+}
+
+#cancelReviewButton {
+    background: rgba(148, 20, 20, 0.9);
+    border-color: rgba(94, 17, 17, 0.9);
+}
+
+#cancelReviewButton:hover {
+    background: rgba(148, 20, 20, 0.99);
+    border-color: rgba(94, 17, 17, 0.99);
+}
+
+/* Posted reviews style */
+#reviewContainer h3 {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.review-title-container > * {
+    margin: 0;
+    padding: 0;
+}
+
+.review-title-container > p {
+    margin-left: 5px;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.review-title-container {
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+.review > p {
+    margin: 10px 5px;
 }

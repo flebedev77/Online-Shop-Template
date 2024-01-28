@@ -5,7 +5,7 @@ const searchButton = document.getElementById("search-button");
 searchButton.onclick = function () {
     search();
 }
-window.onkeydown = function (e) {
+searchBar.onkeydown = function (e) {
     if (e.key == "Enter") {
         search();
     }

@@ -29,6 +29,11 @@ const Datastore = require("nedb")
 const orderedProducts = new Datastore({ filename: 'data/ordered_products.json', autoload: true });
 const accounts = new Datastore({ filename: "data/accounts.json", autoload: true });
 const admin = new Datastore({ filename: "data/admin.json", autoload: true });
+const comments = [];
+
+storeItems.forEach((val, key) => {
+    comments.push(new Datastore({ filename: `data/comments/${key}.json`, autoload: true }));
+})
 
 const MAX_TOKEN_USERS = 10;
 
@@ -336,7 +341,8 @@ app.get("/items/:productName", (req, res) => {
                         itemCost,
                         itemId: currentItemId,
                         author,
-                        description: description
+                        description: description,
+                        comments: comments[currentItemId-1].getAllData()
                     });
                 })
             } else {
@@ -346,12 +352,66 @@ app.get("/items/:productName", (req, res) => {
                     itemCost,
                     itemId: currentItemId,
                     author,
-                    description: description
+                    description: description,
+                    comments: comments[currentItemId-1].getAllData()
                 });
             }
         }
     }
 });
+
+//posting comments on products
+app.post("/publish-comment", (req, res) => {
+    if (!req.body.cookie || !req.body.title || !req.body.content || !req.body.productId) {
+        log("Tried publishing a comment unauthorized");
+        res.status(403).json({ ok: false });
+        return false;
+    }
+
+    const user = decodeCredentialCookie(req.body.cookie);
+
+    //check if the user exists
+    accounts.find({ username: user.username, password: user.password }, (err, docs) => {
+        //error handling
+        if (err) {
+            log(err);
+            res.status(403).json({ ok: false });
+        }
+
+        //check if there is a user if not respond with error
+        if (docs.length == 0) {
+            log("Tried publishing comment with an account which dosen't exist");
+            res.status(403).json({ ok: false });
+            return;
+        } else {
+            //check if there is a comment database to write to
+            if (!comments[req.body.productId-1]) {
+                log("Tried publishing a comment on a product that dosen't have a database");
+                res.status(403).json({ ok: false });
+                return;
+            }
+
+            //getting the data that we need to insert
+            const commentData = {
+                title: req.body.title,
+                content: req.body.content,
+                username: user.username
+            }
+
+            //insert and do some error checking
+            comments[req.body.productId-1].insert(commentData, (err, doc) => {
+                if (err) {
+                    log(err);
+                    res.status(403).json({ ok: false});
+                    return;
+                }
+
+                //respond with the new data
+                res.json({ ok: true, content: doc.content, title: doc.title, username: doc.username });
+            })
+        }
+    })
+})
 
 //route for checkout
 app.get("/checkout/:item", (req, res) => {
