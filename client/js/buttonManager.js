@@ -52,6 +52,7 @@ window.addEventListener("load", function() {
     Signup[2].style.display = "none"
 
     authenticate(getCookie("remember")).then(function (value) {
+        authenticated = value;
         if (value == true) {
             console.log("Account logged in");
 
@@ -66,4 +67,15 @@ window.addEventListener("load", function() {
             Signup[2].style.display = ""
         }
     })
+})
+
+
+window.addEventListener("focus", function() {
+    if (authenticated == false) {
+        authenticate(getCookie("remember")).then((valid) => {
+            if (valid) {
+                window.location.reload();
+            }
+        })
+    }
 })

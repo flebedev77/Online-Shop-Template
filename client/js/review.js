@@ -90,7 +90,7 @@ function addReview(parent, title, content, author) {
     authorp.innerText = author;
 
     const contentp = document.createElement("p");
-    contentp.innerText = content;
+    contentp.innerText = "Posted by " + content;
 
     review.appendChild(reviewTitleContainer);
     reviewTitleContainer.appendChild(header);

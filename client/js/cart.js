@@ -141,9 +141,9 @@ function loadCartItems() {
         })
 }
 
-window.onfocus = function () {
+window.addEventListener("focus", function () {
     loadCartItems();
-}
+});
 
 function arrContains(arr, item) {
     for (let i = 0; i < arr.length; i++) {
