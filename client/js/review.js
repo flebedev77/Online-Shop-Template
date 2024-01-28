@@ -10,10 +10,11 @@ authenticate(getCookie("remember")).then((valid) => {
 
     const reviewContainer = document.getElementById("reviewContainer");
 
+    //remove everything from the url -> "http://localhost:3000/items/3" -> "3"
+    const productId = window.location.href.replace(window.location.origin + "/items/", "")
+
     if (valid) {
         publishReviewButton.onclick = function() {
-            //remove everything from the url -> "http://localhost:3000/items/3" -> "3"
-            const productId = window.location.href.replace(window.location.origin + "/items/", "")
 
             fetch("http://" + window.location.host + "/publish-comment", {
                 method: "POST",
@@ -42,6 +43,24 @@ authenticate(getCookie("remember")).then((valid) => {
         reviewTitleInput.value = "";
         reviewContentInput.value = "";
     }
+
+
+    //getting all the comments other people (and if logged in the current user) have posted in the past
+    fetch("/get-all-comments", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ cookie: getCookie("remember"), productId })
+    }).then((res) => {
+        if (res.ok) return res.json();
+    }).then((data) => {
+        if (data.ok) {
+            data.data.forEach((review) => {
+                addReview(reviewContainer, review.title, review.content, review.username);
+            });
+        }
+    });
 })
 
 //helper function to add reviews to the review container
@@ -74,7 +93,7 @@ function addReview(parent, title, content, author) {
     review.appendChild(reviewTitleContainer);
     reviewTitleContainer.appendChild(header);
     reviewTitleContainer.appendChild(authorp);
-    reviewTitleContainer.appendChild(contentp);
+    review.appendChild(contentp);
 
     parent.appendChild(review);
 }

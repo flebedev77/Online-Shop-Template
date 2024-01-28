@@ -278,9 +278,10 @@ input[type=number] {
 
 .review-title-container {
     padding-bottom: 5px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .review > p {
     margin: 10px 5px;
+    margin-bottom: 30px;
 }

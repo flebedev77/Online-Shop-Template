@@ -413,6 +413,23 @@ app.post("/publish-comment", (req, res) => {
     })
 })
 
+//getting all the comments 
+app.post("/get-all-comments", (req, res) => {
+    if (!req.body.productId) {
+        log("Tried getting all review without specifying the database id");
+        res.status(403).json({ ok: false });
+        return;
+    }
+
+    if (!comments[req.body.productId-1]) {
+        log("Specified a product id which dosen't have a database");
+        res.status(403).json({ ok: false });
+        return;
+    }
+
+    res.json({ ok: true, data: comments[req.body.productId-1].getAllData() });
+})
+
 //route for checkout
 app.get("/checkout/:item", (req, res) => {
     //example url "ebay.com/checkout/1$quantity=2,3$quantity=5"
