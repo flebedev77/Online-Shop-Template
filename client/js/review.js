@@ -29,6 +29,8 @@ authenticate(getCookie("remember")).then((valid) => {
             }).then((data) => {
                 if (data.ok) {
                     addReview(reviewContainer, data.title, data.content, data.username);
+                    reviewTitleInput.value = "";
+                    reviewContentInput.value = "";
                 } else {
                     alert("Failed to post your review. Sorry for the inconvience");
                 }
